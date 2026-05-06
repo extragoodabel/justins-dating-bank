@@ -5,7 +5,6 @@ import {
   useMemo,
   useRef,
   useState,
-  type ChangeEvent,
 } from 'react'
 import { PRESET_PROFILE_SETS } from './data/promptBank'
 import type {
@@ -18,9 +17,6 @@ import type {
   Strength,
 } from './data/promptTypes'
 import { usePromptBankPersistenceContext } from './context/usePromptBankPersistenceContext'
-import { PROMPT_BANK_STORAGE_KEY } from './hooks/usePromptBankStorage'
-import { downloadWorkspaceSave, parseWorkspaceImport } from './hooks/promptBankPersistIo'
-import { exportMatchTrackerBlob, useMatchTracker } from './hooks/useMatchTrackerStorage'
 
 const CATEGORY_ORDER: Category[] = [
   'Getting Personal',
@@ -150,15 +146,8 @@ export default function PromptBankApp({
     removeFromFinalSet,
     clearFinalSet,
     applyPresetSlots,
-    replacePersisted,
-    resetPersisted,
   } = usePromptBankPersistenceContext()
-  const matchTrackerApi = useMatchTracker()
 
-  const importSaveInputRef = useRef<HTMLInputElement | null>(null)
-  const [persistBanner, setPersistBanner] = useState<{ text: string; kind: 'ok' | 'err' } | null>(
-    null,
-  )
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState<Category | 'all'>('all')
@@ -261,70 +250,6 @@ export default function PromptBankApp({
     const t = window.setTimeout(() => setSetNotice(null), 3200)
     return () => window.clearTimeout(t)
   }, [setNotice])
-
-  useEffect(() => {
-    if (!persistBanner) return
-    const t = window.setTimeout(() => setPersistBanner(null), 4500)
-    return () => window.clearTimeout(t)
-  }, [persistBanner])
-
-  const handleExportProject = useCallback(() => {
-    downloadWorkspaceSave(
-      PROMPT_BANK_STORAGE_KEY,
-      persisted,
-      exportMatchTrackerBlob(matchTrackerApi),
-    )
-    setPersistBanner({ text: 'Download started — check your downloads folder.', kind: 'ok' })
-  }, [persisted, matchTrackerApi])
-
-  const handleImportPickClick = useCallback(() => {
-    importSaveInputRef.current?.click()
-  }, [])
-
-  const handleImportSaveFile = useCallback(
-    async (e: ChangeEvent<HTMLInputElement>) => {
-      const input = e.target
-      const file = input.files?.[0]
-      input.value = ''
-      if (!file) return
-      try {
-        const text = await file.text()
-        let parsed: unknown
-        try {
-          parsed = JSON.parse(text) as unknown
-        } catch {
-          setPersistBanner({ text: 'Import failed: file is not valid JSON.', kind: 'err' })
-          return
-        }
-        const result = parseWorkspaceImport(parsed)
-        if (!result.ok) {
-          setPersistBanner({ text: result.error, kind: 'err' })
-          return
-        }
-        const confirmReplace = window.confirm(
-          'Importing replaces your prompt bank in this browser. If this file includes match notes, those replace your Match Tracker too. Continue?',
-        )
-        if (!confirmReplace) return
-        replacePersisted(result.promptBank)
-        if (result.matchTracker !== 'preserve') {
-          matchTrackerApi.replaceAll(result.matchTracker)
-        }
-        setPersistBanner({ text: 'Import complete — restored to this browser.', kind: 'ok' })
-      } catch {
-        setPersistBanner({ text: 'Import failed: could not read file.', kind: 'err' })
-      }
-    },
-    [replacePersisted, matchTrackerApi],
-  )
-
-  const handleResetLocalEdits = useCallback(() => {
-    const ok = window.confirm(
-      'Clear all local edits for this prompt bank in this browser? This cannot be undone.',
-    )
-    if (!ok) return
-    resetPersisted()
-    setPersistBanner({ text: 'Local edits cleared.', kind: 'ok' })
-  }, [resetPersisted])
 
   const copyText = useCallback(async (text: string, id: string) => {
     try {
@@ -504,51 +429,6 @@ export default function PromptBankApp({
                 />
                 Low cliché only
               </label>
-            </div>
-
-            <div className="flex flex-col gap-2 border-t border-[#2A2A2A]/70 pt-3">
-              <p className="max-w-[72ch] font-mono text-[10px] leading-relaxed text-[#6b6b6b]">
-                Saved locally in this browser. Export a backup if you want to keep or share your work.
-              </p>
-              {persistBanner ? (
-                <p
-                  className={`font-mono text-[10px] leading-snug ${
-                    persistBanner.kind === 'err' ? 'text-red-300/95' : 'text-[#9EFF6B]'
-                  }`}
-                >
-                  {persistBanner.text}
-                </p>
-              ) : null}
-              <div className="flex flex-wrap items-center gap-2">
-                <button
-                  type="button"
-                  onClick={handleExportProject}
-                  className="rounded-lg border border-[#9EFF6B]/45 bg-[#9EFF6B]/10 px-4 py-2 font-mono text-[10px] font-semibold uppercase tracking-wide text-[#9EFF6B] transition hover:bg-[#9EFF6B]/18"
-                >
-                  Export Project
-                </button>
-                <button
-                  type="button"
-                  onClick={handleImportPickClick}
-                  className="rounded-lg border border-[#2A2A2A] bg-[#151515] px-4 py-2 font-mono text-[10px] font-semibold uppercase tracking-wide text-[#F5F5F5] transition hover:border-[#9EFF6B]/35"
-                >
-                  Import Project
-                </button>
-                <input
-                  ref={importSaveInputRef}
-                  type="file"
-                  accept=".json,application/json"
-                  className="sr-only"
-                  onChange={handleImportSaveFile}
-                />
-                <button
-                  type="button"
-                  onClick={handleResetLocalEdits}
-                  className="rounded-lg border border-[#2A2A2A] px-4 py-2 font-mono text-[10px] uppercase tracking-wide text-[#888888] transition hover:border-red-900/55 hover:text-red-200/90"
-                >
-                  Reset Local Edits
-                </button>
-              </div>
             </div>
           </div>
         </div>

@@ -4,9 +4,10 @@ import { MatchTrackerProvider } from './hooks/useMatchTrackerStorage'
 import { PromptBankPersistenceProvider } from './context/PromptBankPersistenceProvider'
 import MatchTrackerTab from './MatchTrackerTab'
 import PromptBankApp from './PromptBankApp'
+import SaveProgressTab from './SaveProgressTab'
 import SignalReportTab from './SignalReportTab'
 
-export type WorkspaceTabId = 'bank' | 'tracker' | 'signal'
+export type WorkspaceTabId = 'bank' | 'tracker' | 'signal' | 'save'
 
 const TAB_BTN =
   'relative whitespace-nowrap px-3 py-3 font-mono text-[11px] uppercase tracking-[0.16em] transition-colors md:px-5 md:text-[12px]'
@@ -25,6 +26,7 @@ export default function JustinWorkspace() {
                   ['bank', 'Prompt Bank'],
                   ['tracker', 'Match Tracker'],
                   ['signal', 'Signal Report'],
+                  ['save', 'Save progress'],
                 ] as const
               ).map(([id, label]) => (
                 <button
@@ -46,6 +48,7 @@ export default function JustinWorkspace() {
           {tab === 'bank' && <PromptBankApp stickyChromeTopClass="top-[52px]" />}
           {tab === 'tracker' && <MatchTrackerTab />}
           {tab === 'signal' && <SignalReportTab />}
+          {tab === 'save' && <SaveProgressTab />}
         </div>
       </MatchTrackerProvider>
     </PromptBankPersistenceProvider>

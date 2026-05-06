@@ -350,7 +350,7 @@ export default function SignalReportTab() {
           Workshop observations
         </h2>
         <p className="mt-2 text-xs text-[#6b6b6b]">
-          Narrative notes for Extra Good — exported with your workspace backup from Prompt Bank.
+          Narrative notes for Extra Good — included when you export from Save progress.
         </p>
         <textarea
           value={signalObservations}
