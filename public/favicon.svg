@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Reds-adjacent baseball red -->
+  <rect width="32" height="32" rx="7" fill="#C41E3A"/>
+  <path
+    fill="#ffffff"
+    d="M16 27.2c-6.4-4.5-10.5-9.2-10.5-14 0-3.6 2.8-6.5 6.3-6.5 2 0 3.9 1 5 2.6 1.1-1.6 3-2.6 5-2.6 3.5 0 6.3 2.9 6.3 6.5 0 4.8-4.1 9.5-10.5 14z"
+  />
+  <!-- Baseball seams (red on white heart) -->
+  <g fill="none" stroke="#C41E3A" stroke-linecap="round" stroke-width="1">
+    <path d="M10.8 9.2 Q11.3 14.5 9.6 20"/>
+    <path d="M21.2 9.2 Q20.7 14.5 22.4 20"/>
+  </g>
+  <!-- Stitch marks -->
+  <g stroke="#C41E3A" stroke-linecap="round" stroke-width="0.65">
+    <line x1="10.5" y1="11.2" x2="11.6" y2="10.6"/>
+    <line x1="10.8" y1="13.8" x2="12.1" y2="13.4"/>
+    <line x1="10.4" y1="16.4" x2="11.8" y2="16.1"/>
+    <line x1="9.9" y1="18.9" x2="11.3" y2="18.7"/>
+    <line x1="21.5" y1="11.2" x2="20.4" y2="10.6"/>
+    <line x1="21.2" y1="13.8" x2="19.9" y2="13.4"/>
+    <line x1="21.6" y1="16.4" x2="20.2" y2="16.1"/>
+    <line x1="22.1" y1="18.9" x2="20.7" y2="18.7"/>
+  </g>
+</svg>
