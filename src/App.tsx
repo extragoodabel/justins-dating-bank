@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import PromptBankApp from './PromptBankApp'
+import JustinWorkspace from './JustinWorkspace'
 import WorkshopDeck from './WorkshopDeck'
 
 export default function App() {
@@ -17,5 +17,5 @@ export default function App() {
     return () => window.removeEventListener('hashchange', sync)
   }, [])
 
-  return mode === 'workshop' ? <WorkshopDeck /> : <PromptBankApp />
+  return mode === 'workshop' ? <WorkshopDeck /> : <JustinWorkspace />
 }

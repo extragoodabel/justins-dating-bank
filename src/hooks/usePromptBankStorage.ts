@@ -2,7 +2,8 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { annotateAnswer } from '../data/clicheInference'
 import type { Answer, FinalSetSlot, Prompt } from '../data/promptTypes'
 
-const STORAGE_KEY = 'eg-justin-prompt-bank-v1'
+export const PROMPT_BANK_STORAGE_KEY = 'eg-justin-prompt-bank-v1'
+const STORAGE_KEY = PROMPT_BANK_STORAGE_KEY
 
 export type PersistedBlob = {
   customAnswersByPrompt: Record<string, Answer[]>
@@ -189,6 +190,21 @@ export function usePromptBankPersistence(basePrompts: Prompt[]) {
     [basePrompts],
   )
 
+  const replacePersisted = useCallback((blob: PersistedBlob) => {
+    setPersisted({
+      customAnswersByPrompt: structuredClone(blob.customAnswersByPrompt),
+      answerOverrides: structuredClone(blob.answerOverrides),
+      finalSet: structuredClone(blob.finalSet),
+    })
+  }, [])
+
+  const resetPersisted = useCallback(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem(STORAGE_KEY)
+    }
+    setPersisted(emptyPersist())
+  }, [])
+
   return {
     persisted,
     prompts,
@@ -200,5 +216,7 @@ export function usePromptBankPersistence(basePrompts: Prompt[]) {
     removeFromFinalSet,
     clearFinalSet,
     applyPresetSlots,
+    replacePersisted,
+    resetPersisted,
   }
 }
