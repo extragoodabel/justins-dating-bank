@@ -1,4 +1,5 @@
 import { annotateAnswer } from '../data/clicheInference'
+import { normalizeAnswerAuthor } from '../data/answerDisplay'
 import { normalizeMatchTrackerPersisted } from '../data/matchTrackerNormalize'
 import type { MatchTrackerPersisted } from '../data/matchTrackerTypes'
 import type { Answer, AnswerTier, CatalogAnswer, ClicheLevel, FinalSetSlot } from '../data/promptTypes'
@@ -50,6 +51,8 @@ function normalizeImportedAnswer(entry: unknown): Answer | null {
   const tier: AnswerTier | undefined =
     tr === 'recommended' || tr === 'experimental' || tr === 'needs_work' ? tr : undefined
 
+  const writtenBy = normalizeAnswerAuthor(entry.writtenBy)
+
   const base: CatalogAnswer = {
     id,
     text,
@@ -58,12 +61,14 @@ function normalizeImportedAnswer(entry: unknown): Answer | null {
     favorite,
     notes,
     tier,
+    writtenBy,
   }
   const cl = asClicheLevel(entry.clicheLevel)
   if (cl != null && Array.isArray(entry.clicheReasons)) {
     const reasons = entry.clicheReasons.filter((r): r is string => typeof r === 'string')
+    const annotated = annotateAnswer(base)
     return {
-      ...base,
+      ...annotated,
       clicheLevel: cl,
       clicheReasons: reasons,
     }
@@ -98,6 +103,9 @@ function normalizeOverrides(raw: unknown): PersistedBlob['answerOverrides'] {
     if (cl != null) slice.clicheLevel = cl
     if (Array.isArray(val.clicheReasons)) {
       slice.clicheReasons = val.clicheReasons.filter((r): r is string => typeof r === 'string')
+    }
+    if (val.writtenBy === 'human' || val.writtenBy === 'ai') {
+      slice.writtenBy = val.writtenBy
     }
     if (Object.keys(slice).length > 0) out[key] = slice
   }

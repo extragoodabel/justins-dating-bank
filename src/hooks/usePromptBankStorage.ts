@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { annotateAnswer } from '../data/clicheInference'
+import { sortAnswersForDisplay } from '../data/answerDisplay'
 import type { Answer, FinalSetSlot, Prompt } from '../data/promptTypes'
 
 export const PROMPT_BANK_STORAGE_KEY = 'eg-justin-prompt-bank-v1'
@@ -9,7 +10,9 @@ export type PersistedBlob = {
   customAnswersByPrompt: Record<string, Answer[]>
   answerOverrides: Record<
     string,
-    Partial<Pick<Answer, 'favorite' | 'recommended' | 'notes' | 'clicheLevel' | 'clicheReasons'>>
+    Partial<
+      Pick<Answer, 'favorite' | 'recommended' | 'notes' | 'clicheLevel' | 'clicheReasons' | 'writtenBy'>
+    >
   >
   finalSet: FinalSetSlot[]
 }
@@ -42,19 +45,22 @@ function saveRaw(blob: PersistedBlob) {
 
 export function mergeAnswersIntoPrompt(p: Prompt, persisted: PersistedBlob): Prompt {
   const rawExtra = persisted.customAnswersByPrompt[p.id] ?? []
-  const extra = rawExtra.map((a) =>
-    a.clicheLevel != null && Array.isArray(a.clicheReasons)
-      ? a
-      : annotateAnswer({
-          id: a.id,
-          text: a.text,
-          tags: a.tags ?? [],
-          recommended: a.recommended,
-          favorite: a.favorite,
-          notes: a.notes,
-          tier: a.tier,
-        }),
-  )
+  const extra = rawExtra.map((a): Answer => {
+    const base = annotateAnswer({
+      id: a.id,
+      text: a.text,
+      tags: a.tags ?? [],
+      recommended: a.recommended,
+      favorite: a.favorite,
+      notes: a.notes,
+      tier: a.tier,
+      writtenBy: a.writtenBy,
+    })
+    if (a.clicheLevel != null && Array.isArray(a.clicheReasons)) {
+      return { ...base, clicheLevel: a.clicheLevel, clicheReasons: a.clicheReasons }
+    }
+    return base
+  })
   const merged = [...p.answers, ...extra].map((a) => {
     const ov = persisted.answerOverrides[a.id]
     if (!ov) return { ...a }
@@ -65,9 +71,10 @@ export function mergeAnswersIntoPrompt(p: Prompt, persisted: PersistedBlob): Pro
       notes: ov.notes !== undefined ? ov.notes : a.notes,
       clicheLevel: ov.clicheLevel !== undefined ? ov.clicheLevel : a.clicheLevel,
       clicheReasons: ov.clicheReasons !== undefined ? ov.clicheReasons : a.clicheReasons,
+      writtenBy: ov.writtenBy !== undefined ? ov.writtenBy : a.writtenBy,
     }
   })
-  return { ...p, answers: merged }
+  return { ...p, answers: sortAnswersForDisplay(merged) }
 }
 
 export function usePromptBankPersistence(basePrompts: Prompt[]) {
@@ -134,6 +141,7 @@ export function usePromptBankPersistence(basePrompts: Prompt[]) {
       id,
       text: trimmed,
       tags: ['custom'],
+      writtenBy: 'human',
     })
     setPersisted((prev) => ({
       ...prev,

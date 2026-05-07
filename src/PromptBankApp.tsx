@@ -9,6 +9,7 @@ import {
 import { PRESET_PROFILE_SETS } from './data/promptBank'
 import type {
   Answer,
+  AnswerAuthor,
   AnswerTier,
   Category,
   ClicheLevel,
@@ -162,23 +163,99 @@ export default function PromptBankApp({
   const [setNotice, setSetNotice] = useState<string | null>(null)
   const detailRef = useRef<HTMLElement | null>(null)
   const stickyChromeRef = useRef<HTMLDivElement | null>(null)
+  const searchInputRef = useRef<HTMLInputElement | null>(null)
+  const lastScrollYRef = useRef(0)
   const [compactChrome, setCompactChrome] = useState(false)
+  /** Below md breakpoint: collapse header + filters while scrolling down */
+  const [mobileFiltersCollapsed, setMobileFiltersCollapsed] = useState(false)
+
+  const activeFilterCount = useMemo(() => {
+    let n = 0
+    if (search.trim()) n += 1
+    if (category !== 'all') n += 1
+    if (strengthF !== 'all') n += 1
+    if (roleF !== 'all') n += 1
+    if (recOnly) n += 1
+    if (favOnly) n += 1
+    if (hideHighCliche) n += 1
+    if (lowClicheOnly) n += 1
+    return n
+  }, [
+    search,
+    category,
+    strengthF,
+    roleF,
+    recOnly,
+    favOnly,
+    hideHighCliche,
+    lowClicheOnly,
+  ])
+
+  useEffect(() => {
+    lastScrollYRef.current = typeof window !== 'undefined' ? window.scrollY : 0
+  }, [])
+
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 768px)')
+    const onMq = () => {
+      if (mq.matches) setMobileFiltersCollapsed(false)
+    }
+    mq.addEventListener('change', onMq)
+    return () => mq.removeEventListener('change', onMq)
+  }, [])
 
   useEffect(() => {
     let raf = 0
+    const DELTA_MIN = 10
+    const COLLAPSE_AFTER_Y = 72
+
     const onScroll = () => {
       cancelAnimationFrame(raf)
       raf = requestAnimationFrame(() => {
-        const next = window.scrollY > 48
-        setCompactChrome((prev) => (prev !== next ? next : prev))
+        const y = window.scrollY
+        const prev = lastScrollYRef.current
+        const delta = y - prev
+        lastScrollYRef.current = y
+
+        const md = window.matchMedia('(min-width: 768px)').matches
+
+        if (md) {
+          setCompactChrome(y > 56)
+          return
+        }
+
+        if (y < 28) {
+          setMobileFiltersCollapsed(false)
+          return
+        }
+
+        if (Math.abs(delta) < DELTA_MIN) return
+
+        if (delta > 0 && y > COLLAPSE_AFTER_Y) {
+          setMobileFiltersCollapsed(true)
+        } else if (delta < 0) {
+          setMobileFiltersCollapsed(false)
+        }
       })
     }
+
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => {
       cancelAnimationFrame(raf)
       window.removeEventListener('scroll', onScroll)
     }
+  }, [])
+
+  const expandMobileChromeAndFocusSearch = useCallback(() => {
+    setMobileFiltersCollapsed(false)
+    window.requestAnimationFrame(() => {
+      searchInputRef.current?.focus()
+    })
+  }, [])
+
+  const expandMobileChrome = useCallback(() => {
+    setMobileFiltersCollapsed(false)
   }, [])
 
   useLayoutEffect(() => {
@@ -194,7 +271,7 @@ export default function PromptBankApp({
       ro.disconnect()
       document.documentElement.style.removeProperty('--prompt-bank-sticky-h')
     }
-  }, [compactChrome])
+  }, [compactChrome, mobileFiltersCollapsed])
 
   const filtered = useMemo(
     () =>
@@ -307,45 +384,55 @@ export default function PromptBankApp({
     <div className="flex min-h-[100dvh] flex-col bg-[#0B0B0B] text-[#F5F5F5]">
       <div
         ref={stickyChromeRef}
-        className={`sticky z-30 shrink-0 border-b border-[#2A2A2A] bg-[#0B0B0B]/95 backdrop-blur-md ${stickyChromeTopClass}`}
+        className={`sticky z-30 shrink-0 border-b border-[#2A2A2A] bg-[#0B0B0B]/95 backdrop-blur-md motion-safe:transition-shadow motion-safe:duration-300 ${stickyChromeTopClass}`}
       >
+        {/* Title + search/filters — collapses on small screens while scrolling down */}
         <div
-          className={`px-5 transition-[padding] duration-300 ease-out md:px-12 ${
-            compactChrome ? 'pb-2 pt-3 md:pb-2 md:pt-3' : 'pb-4 pt-6 md:pb-6 md:pt-8'
+          id="prompt-bank-filter-panel"
+          className={`motion-safe:transition-[max-height,opacity] motion-safe:duration-300 motion-safe:ease-out motion-reduce:transition-none ${
+            mobileFiltersCollapsed
+              ? 'pointer-events-none max-h-0 opacity-0 motion-safe:overflow-hidden md:pointer-events-auto md:max-h-none md:opacity-100 md:overflow-visible'
+              : 'pointer-events-auto max-h-[min(220vh,3200px)] opacity-100 motion-safe:overflow-visible'
           }`}
         >
-          <p
-            className={`font-mono font-semibold uppercase tracking-[0.28em] text-[#9EFF6B] transition-all duration-300 ${
-              compactChrome ? 'text-[9px]' : 'text-[10px]'
+          <div
+            className={`px-5 transition-[padding] duration-300 ease-out md:px-12 motion-reduce:transition-none ${
+              compactChrome ? 'pb-2 pt-3 md:pb-2 md:pt-3' : 'pb-4 pt-6 md:pb-6 md:pt-8'
             }`}
           >
-            Extra Good · Internal Tool
-          </p>
-          <h1
-            className={`font-semibold tracking-tight transition-[font-size,margin] duration-300 ease-out ${
-              compactChrome ? 'mt-1 text-lg md:text-xl' : 'mt-3 text-2xl md:text-3xl'
-            }`}
-          >
-            Justin&apos;s Dating Profile Prompt Bank
-          </h1>
-        </div>
+            <p
+              className={`font-mono font-semibold uppercase tracking-[0.28em] text-[#9EFF6B] transition-all duration-300 motion-reduce:transition-none ${
+                compactChrome ? 'text-[9px]' : 'text-[10px]'
+              }`}
+            >
+              Extra Good · Internal Tool
+            </p>
+            <h1
+              className={`font-semibold tracking-tight transition-[font-size,margin] duration-300 ease-out motion-reduce:transition-none ${
+                compactChrome ? 'mt-1 text-lg md:text-xl' : 'mt-3 text-2xl md:text-3xl'
+              }`}
+            >
+              Justin&apos;s Dating Profile Prompt Bank
+            </h1>
+          </div>
 
-        <div
-          className={`border-t border-[#2A2A2A]/80 px-5 transition-[padding] duration-300 ease-out md:px-12 ${
-            compactChrome ? 'pb-3 pt-3' : 'pb-4 pt-4'
-          }`}
-        >
-          <div className="flex flex-col gap-4">
-            <div className="flex flex-col gap-3 lg:flex-row lg:flex-wrap lg:items-end lg:gap-x-4 lg:gap-y-3">
-              <label className="block min-w-[min(100%,280px)] flex-1 font-mono text-[10px] uppercase tracking-[0.18em] text-[#A1A1A1]">
-                Search
-                <input
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Prompts, answers, roles, tags…"
-                  className="mt-2 w-full rounded-xl border border-[#2A2A2A] bg-[#151515] px-4 py-3 font-sans text-sm text-[#F5F5F5] outline-none placeholder:text-[#6b6b6b] focus:border-[#9EFF6B]/45"
-                />
-              </label>
+          <div
+            className={`border-t border-[#2A2A2A]/80 px-5 transition-[padding] duration-300 ease-out motion-reduce:transition-none md:px-12 ${
+              compactChrome ? 'pb-3 pt-3' : 'pb-4 pt-4'
+            }`}
+          >
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-3 lg:flex-row lg:flex-wrap lg:items-end lg:gap-x-4 lg:gap-y-3">
+                <label className="block min-w-[min(100%,280px)] flex-1 font-mono text-[10px] uppercase tracking-[0.18em] text-[#A1A1A1]">
+                  Search
+                  <input
+                    ref={searchInputRef}
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    placeholder="Prompts, answers, roles, tags…"
+                    className="mt-2 w-full rounded-xl border border-[#2A2A2A] bg-[#151515] px-4 py-3 font-sans text-sm text-[#F5F5F5] outline-none placeholder:text-[#6b6b6b] focus:border-[#9EFF6B]/45"
+                  />
+                </label>
               <label className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#A1A1A1]">
                 Category
                 <select
@@ -431,6 +518,54 @@ export default function PromptBankApp({
               </label>
             </div>
           </div>
+        </div>
+        </div>
+
+        {/* Narrow screens: slim bar to reopen search & filters while scrolled */}
+        <div
+          className={`motion-safe:transition-[max-height,opacity,padding] motion-safe:duration-300 motion-safe:ease-out motion-reduce:transition-none md:hidden ${
+            mobileFiltersCollapsed
+              ? 'flex max-h-24 items-center gap-2 border-t border-[#2A2A2A]/80 px-4 py-2.5 opacity-100'
+              : 'pointer-events-none max-h-0 overflow-hidden border-transparent px-4 py-0 opacity-0'
+          }`}
+        >
+          <div className="min-w-0 flex-1">
+            <p className="truncate font-mono text-[10px] uppercase tracking-[0.18em] text-[#9EFF6B]">
+              Prompt bank
+            </p>
+            <p className="truncate text-xs text-[#A1A1A1]">
+              {activeFilterCount > 0 ? `${activeFilterCount} filter${activeFilterCount === 1 ? '' : 's'} on` : 'Browse prompts'}
+            </p>
+          </div>
+          <button
+            type="button"
+            aria-label="Search prompts"
+            onClick={expandMobileChromeAndFocusSearch}
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#2A2A2A] bg-[#151515] text-[#A1A1A1] transition hover:border-[#9EFF6B]/35 hover:text-[#F5F5F5]"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              className="size-5"
+              aria-hidden="true"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <path d="m21 21-4.3-4.3" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            aria-expanded={!mobileFiltersCollapsed}
+            aria-controls="prompt-bank-filter-panel"
+            onClick={expandMobileChrome}
+            className="shrink-0 rounded-xl border border-[#9EFF6B]/45 bg-[#9EFF6B]/12 px-4 py-2 font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-[#E9FFB8] transition hover:bg-[#9EFF6B]/20"
+          >
+            Filters
+          </button>
         </div>
       </div>
 
@@ -682,6 +817,27 @@ export default function PromptBankApp({
   )
 }
 
+function AnswerAuthorBadge({ author }: { author: AnswerAuthor }) {
+  if (author === 'human') {
+    return (
+      <span
+        className="rounded-md border border-sky-500/40 bg-sky-950/35 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wide text-sky-100/90"
+        title="Hand-written line (prioritized in this list)"
+      >
+        Human
+      </span>
+    )
+  }
+  return (
+    <span
+      className="rounded-md border border-[#3a3a3a] bg-[#141414] px-2 py-0.5 font-mono text-[10px] uppercase tracking-wide text-[#888888]"
+      title="AI-assisted catalog draft"
+    >
+      AI
+    </span>
+  )
+}
+
 function resolveAnswerTier(a: Answer): AnswerTier | null {
   if (a.tier) return a.tier
   if (a.recommended) return 'recommended'
@@ -922,8 +1078,8 @@ function PromptDetail({
           Refined answers
         </h3>
         <p className="mt-2 max-w-[52ch] font-mono text-[10px] leading-relaxed text-[#6b6b6b]">
-          Hinge-ready lines — derived from voice + strategy. Cliché risk is separate from tier / voice
-          alignment: aim for low cliché and strong alignment together.
+          Human-authored lines sort first; each card shows an AI vs Human badge. Cliché risk is separate
+          from tier / voice alignment.
         </p>
         {filteredAnswers.length === 0 ? (
           <p className="mt-8 rounded-2xl border border-dashed border-[#2A2A2A] bg-[#151515] p-8 text-center text-sm text-[#A1A1A1]">
@@ -950,7 +1106,10 @@ function PromptDetail({
                         {a.text}
                       </p>
                     </div>
-                    {resolvedTier ? <AnswerTierPill tier={resolvedTier} /> : null}
+                    <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
+                      <AnswerAuthorBadge author={a.writtenBy} />
+                      {resolvedTier ? <AnswerTierPill tier={resolvedTier} /> : null}
+                    </div>
                   </div>
                   {tierRecommendedLane && a.clicheLevel === 'high' ? (
                     <p className="mt-3 border-l border-amber-800/40 pl-3 text-xs leading-snug text-amber-100/85">

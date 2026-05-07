@@ -7,6 +7,7 @@ import { PROMPTS_B } from './promptsCatalogB'
 /** Barrel export — single import path for the app */
 export type {
   Answer,
+  AnswerAuthor,
   AnswerTier,
   CatalogAnswer,
   Category,

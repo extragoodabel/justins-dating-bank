@@ -27,6 +27,9 @@ export type AnswerTier = 'recommended' | 'experimental' | 'needs_work'
 export type ClicheLevel = 'low' | 'medium' | 'high'
 
 /** Catalog / persisted draft row before cliché annotation */
+/** Who authored the line — catalog defaults to AI unless marked otherwise */
+export type AnswerAuthor = 'human' | 'ai'
+
 export type CatalogAnswer = {
   id: string
   text: string
@@ -35,9 +38,12 @@ export type CatalogAnswer = {
   favorite?: boolean
   notes?: string
   tier?: AnswerTier
+  /** Omit or `'ai'` for model/catalog drafts; `'human'` for hand-written lines */
+  writtenBy?: AnswerAuthor
 }
 
 export type Answer = CatalogAnswer & {
+  writtenBy: AnswerAuthor
   clicheLevel: ClicheLevel
   clicheReasons: string[]
 }

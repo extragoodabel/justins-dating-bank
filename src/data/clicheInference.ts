@@ -149,11 +149,13 @@ export function inferClicheFromText(text: string, opts?: InferOpts): Pick<Answer
 
 export function annotateAnswer(a: CatalogAnswer): Answer {
   const inferred = inferClicheFromText(a.text, { tier: a.tier })
+  const writtenBy = a.writtenBy === 'human' ? 'human' : 'ai'
   const ov = CLICHE_OVERRIDES[a.id]
-  if (!ov) return { ...a, ...inferred }
+  if (!ov) return { ...a, writtenBy, ...inferred }
 
   return {
     ...a,
+    writtenBy,
     clicheLevel: ov.clicheLevel ?? inferred.clicheLevel,
     clicheReasons: ov.clicheReasons ?? inferred.clicheReasons,
   }
