@@ -1,16 +1,192 @@
 @import 'tailwindcss';
 
-@theme {
-  --color-eg-bg: #0b0b0b;
-  --color-eg-text: #f5f5f5;
-  --color-eg-accent: #9eff6b;
-  --color-eg-muted: #a1a1a1;
+/*
+  Dual theme — primitives (--eg-*) swap per data-theme; Tailwind tokens reference them.
+*/
 
-  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
-  --font-mono: 'Space Mono', ui-monospace, 'Courier New', monospace;
+:root[data-theme='light'],
+:root:not([data-theme]) {
+  --eg-page: #faf8f5;
+  --eg-page-warm: #f6f2eb;
+  --eg-card: #ffffff;
+  --eg-card-inner: #fdfcfa;
+  --eg-muted: #f1ebe3;
+  --eg-border: #e8e1d8;
+  --eg-border-soft: #efe9e2;
+
+  --eg-ink: #221f1e;
+  --eg-ink-secondary: #686059;
+  --eg-ink-soft: #948c85;
+
+  --eg-accent: #a02834;
+  --eg-accent-hover: #86222d;
+  --eg-accent-soft: #f6e9ea;
+  --eg-accent-ink: #3d1519;
+
+  --eg-sage: #7d927f;
+  --eg-sage-soft: #eef4ef;
+  --eg-rose-warm: #b76e82;
+  --eg-rose-soft: #f9eef1;
+  --eg-lilac: #9688b5;
+  --eg-lilac-soft: #f3f0fa;
+
+  --eg-ring-card: rgb(34 31 30 / 0.055);
+
+  --eg-shadow-soft: 0 2px 16px rgb(34 31 30 / 0.06);
+  --eg-shadow-card: 0 4px 24px rgb(34 31 30 / 0.07);
+  --eg-shadow-lift: 0 10px 40px rgb(34 31 30 / 0.09);
+  --eg-shadow-accent-lift: 0 8px 28px -8px rgb(160 40 52 / 0.14);
+  --eg-shadow-accent-pin: 0 4px 20px -6px rgb(160 40 52 / 0.22);
+  --eg-shadow-accent-dot: 0 2px 12px rgb(160 40 52 / 0.38);
+
+  --eg-page-weave: repeating-linear-gradient(
+      125deg,
+      transparent 0 13px,
+      rgb(34 31 30 / 0.017) 13px 14px
+    ),
+    repeating-linear-gradient(-125deg, transparent 0 13px, rgb(34 31 30 / 0.011) 13px 14px);
+  --eg-page-radial: radial-gradient(
+    ellipse 150% 100% at 50% -40%,
+    rgb(160 40 52 / 0.038),
+    transparent 58%
+  );
+
+  --eg-stitch-rule: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='10' viewBox='0 0 28 10'%3E%3Cpath d='M0 7 Q7 2 14 7 T28 7' fill='none' stroke='%23a02834' stroke-width='0.65' opacity='0.38'/%3E%3C/svg%3E");
+
+  --eg-score-ticks: repeating-linear-gradient(
+    90deg,
+    transparent 0,
+    transparent 10px,
+    rgb(34 31 30 / 0.055) 10px,
+    rgb(34 31 30 / 0.055) 11px
+  );
+
+  --eg-card-inset-top: rgb(255 255 255 / 0.94);
+  --eg-card-inset-bottom: rgb(160 40 52 / 0.04);
+}
+
+:root[data-theme='dark'] {
+  --eg-page: #0b0b0b;
+  --eg-page-warm: #0e0e0e;
+  --eg-card: #151515;
+  --eg-card-inner: #1a1a1a;
+  --eg-muted: #141414;
+  --eg-border: #2a2a2a;
+  --eg-border-soft: #242424;
+
+  --eg-ink: #f2f2f0;
+  --eg-ink-secondary: #b5b5ad;
+  --eg-ink-soft: #8a8a82;
+
+  --eg-accent: #9eff6b;
+  --eg-accent-hover: #8deb5c;
+  --eg-accent-soft: #152210;
+  --eg-accent-ink: #0b0b0b;
+
+  --eg-sage: #8faa92;
+  --eg-sage-soft: #1a221c;
+  --eg-rose-warm: #c992a8;
+  --eg-rose-soft: #1f161a;
+  --eg-lilac: #b8aed8;
+  --eg-lilac-soft: #1e1a2a;
+
+  --eg-ring-card: rgb(255 255 255 / 0.06);
+
+  --eg-shadow-soft: 0 2px 18px rgb(0 0 0 / 0.55);
+  --eg-shadow-card: 0 4px 28px rgb(0 0 0 / 0.6);
+  --eg-shadow-lift: 0 12px 48px rgb(0 0 0 / 0.65);
+  --eg-shadow-accent-lift: 0 8px 32px -8px rgb(158 255 107 / 0.18);
+  --eg-shadow-accent-pin: 0 4px 24px -6px rgb(158 255 107 / 0.28);
+  --eg-shadow-accent-dot: 0 2px 16px rgb(158 255 107 / 0.45);
+
+  --eg-page-weave: repeating-linear-gradient(
+      118deg,
+      transparent 0 14px,
+      rgb(255 255 255 / 0.02) 14px 15px
+    ),
+    repeating-linear-gradient(-118deg, transparent 0 14px, rgb(255 255 255 / 0.012) 14px 15px);
+  --eg-page-radial: radial-gradient(
+    ellipse 130% 90% at 50% -30%,
+    rgb(158 255 107 / 0.055),
+    transparent 55%
+  );
+
+  --eg-stitch-rule: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='10' viewBox='0 0 28 10'%3E%3Cpath d='M0 7 Q7 2 14 7 T28 7' fill='none' stroke='%239EFF6B' stroke-width='0.65' opacity='0.28'/%3E%3C/svg%3E");
+
+  --eg-score-ticks: repeating-linear-gradient(
+    90deg,
+    transparent 0,
+    transparent 10px,
+    rgb(255 255 255 / 0.06) 10px,
+    rgb(255 255 255 / 0.06) 11px
+  );
+
+  --eg-card-inset-top: rgb(255 255 255 / 0.06);
+  --eg-card-inset-bottom: rgb(158 255 107 / 0.07);
+}
+
+@theme {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    sans-serif;
+  --font-display: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+
+  --color-page: var(--eg-page);
+  --color-page-warm: var(--eg-page-warm);
+  --color-card: var(--eg-card);
+  --color-card-inner: var(--eg-card-inner);
+  --color-muted: var(--eg-muted);
+  --color-border: var(--eg-border);
+  --color-border-soft: var(--eg-border-soft);
+
+  --color-ink: var(--eg-ink);
+  --color-ink-secondary: var(--eg-ink-secondary);
+  --color-ink-soft: var(--eg-ink-soft);
+
+  --color-accent: var(--eg-accent);
+  --color-accent-hover: var(--eg-accent-hover);
+  --color-accent-soft: var(--eg-accent-soft);
+  --color-accent-ink: var(--eg-accent-ink);
+
+  --color-sage: var(--eg-sage);
+  --color-sage-soft: var(--eg-sage-soft);
+  --color-rose-warm: var(--eg-rose-warm);
+  --color-rose-soft: var(--eg-rose-soft);
+  --color-lilac: var(--eg-lilac);
+  --color-lilac-soft: var(--eg-lilac-soft);
+
+  --color-ring-card: var(--eg-ring-card);
+
+  --shadow-soft: var(--eg-shadow-soft);
+  --shadow-card: var(--eg-shadow-card);
+  --shadow-lift: var(--eg-shadow-lift);
+  --shadow-accent-lift: var(--eg-shadow-accent-lift);
+  --shadow-accent-pin: var(--eg-shadow-accent-pin);
+  --shadow-accent-dot: var(--eg-shadow-accent-dot);
+
+  --image-page-weave: var(--eg-page-weave);
+  --image-page-radial: var(--eg-page-radial);
+  --image-stitch-rule: var(--eg-stitch-rule);
+  --image-score-ticks: var(--eg-score-ticks);
 }
 
 @layer base {
+  html {
+    color-scheme: light dark;
+    background-color: var(--eg-page);
+    transition:
+      background-color 180ms ease-out,
+      color 180ms ease-out;
+  }
+
+  html[data-theme='light'],
+  html:not([data-theme]) {
+    color-scheme: light;
+  }
+
+  html[data-theme='dark'] {
+    color-scheme: dark;
+  }
+
   html,
   body,
   #root {
@@ -19,6 +195,63 @@
   }
 
   body {
-    @apply bg-[#0B0B0B] font-sans text-[#F5F5F5] antialiased;
+    @apply font-sans text-ink antialiased;
+    font-feature-settings: 'kern' 1, 'liga' 1;
+    background-color: var(--eg-page);
+    transition:
+      background-color 180ms ease-out,
+      color 180ms ease-out;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html,
+    body {
+      transition: none;
+    }
+  }
+}
+
+@layer components {
+  .page-atmosphere {
+    background-color: var(--eg-page);
+    background-image: var(--eg-page-radial), var(--eg-page-weave);
+    background-attachment: fixed;
+    transition:
+      background-color 180ms ease-out,
+      background-image 180ms ease-out;
+  }
+
+  .card-stock {
+    box-shadow:
+      inset 0 1px 0 var(--eg-card-inset-top),
+      inset 0 -1px 0 var(--eg-card-inset-bottom),
+      var(--eg-shadow-soft);
+    transition: box-shadow 180ms ease-out;
+  }
+
+  .stitch-rule {
+    height: 12px;
+    background-image: var(--eg-stitch-rule);
+    background-repeat: repeat-x;
+    background-position: center bottom;
+    background-size: 28px 10px;
+    opacity: 0.42;
+    transition: opacity 180ms ease-out;
+  }
+
+  [data-theme='dark'] .stitch-rule {
+    opacity: 0.35;
+  }
+
+  .score-ticks {
+    background-image: var(--eg-score-ticks);
+    transition: background-image 180ms ease-out;
+  }
+
+  .chrome-blur {
+    @apply border-border bg-page/88 backdrop-blur-md;
+    transition:
+      background-color 180ms ease-out,
+      border-color 180ms ease-out;
   }
 }

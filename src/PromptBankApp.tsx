@@ -36,10 +36,10 @@ const ROLES: StrategicRole[] = ['Hook', 'Humor', 'Values', 'Filter', 'Conversati
 
 const STRENGTH_CARD: Record<Strength, string> = {
   Lock:
-    'border-[#9EFF6B]/75 bg-[#9EFF6B]/14 text-[#E9FFB8] shadow-[0_0_14px_-6px_rgba(158,255,107,0.65)]',
-  Strong: 'border-[#9EFF6B]/22 bg-[#151515] text-[#C8F5A8]',
-  Useful: 'border-[#2A2A2A] bg-[#151515] text-[#A1A1A1]',
-  'Use Carefully': 'border-amber-900/45 bg-amber-950/22 text-amber-100/85',
+    'border-accent/50 bg-accent-soft text-accent-ink shadow-[var(--shadow-accent-pin)]',
+  Strong: 'border-sage/35 bg-card text-sage',
+  Useful: 'border-border bg-card text-ink-secondary',
+  'Use Carefully': 'border-amber-200/90 bg-amber-50 text-amber-950',
 }
 
 function summarize(text: string, max = 118): string {
@@ -58,7 +58,7 @@ function AnswerNotesField({
   const [value, setValue] = useState(initialNotes)
 
   return (
-    <label className="mt-4 block font-mono text-[10px] uppercase tracking-[0.18em] text-[#6b6b6b]">
+    <label className="mt-4 block font-sans text-[10px] uppercase tracking-[0.18em] text-ink-soft">
       Notes (local)
       <textarea
         value={value}
@@ -66,7 +66,7 @@ function AnswerNotesField({
         onBlur={() => onCommit(value)}
         rows={2}
         placeholder="Creative direction, staging, what to avoid…"
-        className="mt-2 w-full resize-y rounded-xl border border-[#2A2A2A] bg-[#0B0B0B] px-3 py-2 text-sm text-[#F5F5F5] outline-none focus:border-[#9EFF6B]/45"
+        className="mt-2 w-full resize-y rounded-xl border border-border bg-page px-3 py-2 text-sm text-ink outline-none focus:border-accent/40"
       />
     </label>
   )
@@ -381,10 +381,10 @@ export default function PromptBankApp({
   }
 
   return (
-    <div className="flex min-h-[100dvh] flex-col bg-[#0B0B0B] text-[#F5F5F5]">
+    <div className="flex min-h-[100dvh] flex-col text-ink">
       <div
         ref={stickyChromeRef}
-        className={`sticky z-30 shrink-0 border-b border-[#2A2A2A] bg-[#0B0B0B]/95 backdrop-blur-md motion-safe:transition-shadow motion-safe:duration-300 ${stickyChromeTopClass}`}
+        className={`sticky z-30 shrink-0 chrome-blur border-b border-border motion-safe:transition-shadow motion-safe:duration-300 ${stickyChromeTopClass}`}
       >
         {/* Title + search/filters — collapses on small screens while scrolling down */}
         <div
@@ -401,14 +401,14 @@ export default function PromptBankApp({
             }`}
           >
             <p
-              className={`font-mono font-semibold uppercase tracking-[0.28em] text-[#9EFF6B] transition-all duration-300 motion-reduce:transition-none ${
+              className={`font-sans font-semibold uppercase tracking-[0.28em] text-accent transition-all duration-300 motion-reduce:transition-none ${
                 compactChrome ? 'text-[9px]' : 'text-[10px]'
               }`}
             >
               Extra Good · Internal Tool
             </p>
             <h1
-              className={`font-semibold tracking-tight transition-[font-size,margin] duration-300 ease-out motion-reduce:transition-none ${
+              className={`font-display font-semibold tracking-[0.01em] transition-[font-size,margin] duration-300 ease-out motion-reduce:transition-none ${
                 compactChrome ? 'mt-1 text-lg md:text-xl' : 'mt-3 text-2xl md:text-3xl'
               }`}
             >
@@ -417,28 +417,28 @@ export default function PromptBankApp({
           </div>
 
           <div
-            className={`border-t border-[#2A2A2A]/80 px-5 transition-[padding] duration-300 ease-out motion-reduce:transition-none md:px-12 ${
+            className={`border-t border-border px-5 transition-[padding] duration-300 ease-out motion-reduce:transition-none md:px-12 ${
               compactChrome ? 'pb-3 pt-3' : 'pb-4 pt-4'
             }`}
           >
             <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-3 lg:flex-row lg:flex-wrap lg:items-end lg:gap-x-4 lg:gap-y-3">
-                <label className="block min-w-[min(100%,280px)] flex-1 font-mono text-[10px] uppercase tracking-[0.18em] text-[#A1A1A1]">
+                <label className="block min-w-[min(100%,280px)] flex-1 font-sans text-[10px] uppercase tracking-[0.18em] text-ink-secondary">
                   Search
                   <input
                     ref={searchInputRef}
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     placeholder="Prompts, answers, roles, tags…"
-                    className="mt-2 w-full rounded-xl border border-[#2A2A2A] bg-[#151515] px-4 py-3 font-sans text-sm text-[#F5F5F5] outline-none placeholder:text-[#6b6b6b] focus:border-[#9EFF6B]/45"
+                    className="mt-2 w-full rounded-xl border border-border bg-card px-4 py-3 font-sans text-sm text-ink outline-none placeholder:text-ink-soft focus:border-accent/40"
                   />
                 </label>
-              <label className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#A1A1A1]">
+              <label className="font-sans text-[10px] uppercase tracking-[0.18em] text-ink-secondary">
                 Category
                 <select
                   value={category}
                   onChange={(e) => setCategory(e.target.value as Category | 'all')}
-                  className="mt-2 block w-full min-w-[200px] rounded-xl border border-[#2A2A2A] bg-[#151515] px-4 py-3 font-sans text-sm text-[#F5F5F5] outline-none focus:border-[#9EFF6B]/45 lg:w-52"
+                  className="mt-2 block w-full min-w-[200px] rounded-xl border border-border bg-card px-4 py-3 font-sans text-sm text-ink outline-none focus:border-accent/40 lg:w-52"
                 >
                   <option value="all">All</option>
                   {CATEGORY_ORDER.map((c) => (
@@ -448,12 +448,12 @@ export default function PromptBankApp({
                   ))}
                 </select>
               </label>
-              <label className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#A1A1A1]">
+              <label className="font-sans text-[10px] uppercase tracking-[0.18em] text-ink-secondary">
                 Strength
                 <select
                   value={strengthF}
                   onChange={(e) => setStrengthF(e.target.value as Strength | 'all')}
-                  className="mt-2 block w-full min-w-[160px] rounded-xl border border-[#2A2A2A] bg-[#151515] px-4 py-3 font-sans text-sm outline-none focus:border-[#9EFF6B]/45 lg:w-44"
+                  className="mt-2 block w-full min-w-[160px] rounded-xl border border-border bg-card px-4 py-3 font-sans text-sm outline-none focus:border-accent/40 lg:w-44"
                 >
                   <option value="all">All</option>
                   {STRENGTHS.map((s) => (
@@ -463,12 +463,12 @@ export default function PromptBankApp({
                   ))}
                 </select>
               </label>
-              <label className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#A1A1A1]">
+              <label className="font-sans text-[10px] uppercase tracking-[0.18em] text-ink-secondary">
                 Role
                 <select
                   value={roleF}
                   onChange={(e) => setRoleF(e.target.value as StrategicRole | 'all')}
-                  className="mt-2 block w-full min-w-[160px] rounded-xl border border-[#2A2A2A] bg-[#151515] px-4 py-3 font-sans text-sm outline-none focus:border-[#9EFF6B]/45 lg:w-44"
+                  className="mt-2 block w-full min-w-[160px] rounded-xl border border-border bg-card px-4 py-3 font-sans text-sm outline-none focus:border-accent/40 lg:w-44"
                 >
                   <option value="all">All</option>
                   {ROLES.map((r) => (
@@ -479,40 +479,40 @@ export default function PromptBankApp({
                 </select>
               </label>
             </div>
-            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-[#2A2A2A]/70 pt-3">
-              <label className="flex cursor-pointer items-center gap-2 font-mono text-[10px] uppercase tracking-[0.16em] text-[#A1A1A1]">
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-border pt-3">
+              <label className="flex cursor-pointer items-center gap-2 font-sans text-[10px] uppercase tracking-[0.16em] text-ink-secondary">
                 <input
                   type="checkbox"
                   checked={favOnly}
                   onChange={(e) => setFavOnly(e.target.checked)}
-                  className="size-4 accent-[#9EFF6B]"
+                  className="size-4 accent-accent"
                 />
                 Favorites
               </label>
-              <label className="flex cursor-pointer items-center gap-2 font-mono text-[10px] uppercase tracking-[0.16em] text-[#A1A1A1]">
+              <label className="flex cursor-pointer items-center gap-2 font-sans text-[10px] uppercase tracking-[0.16em] text-ink-secondary">
                 <input
                   type="checkbox"
                   checked={recOnly}
                   onChange={(e) => setRecOnly(e.target.checked)}
-                  className="size-4 accent-[#9EFF6B]"
+                  className="size-4 accent-accent"
                 />
                 Recommended only
               </label>
-              <label className="flex cursor-pointer items-center gap-2 font-mono text-[10px] uppercase tracking-[0.16em] text-[#A1A1A1]">
+              <label className="flex cursor-pointer items-center gap-2 font-sans text-[10px] uppercase tracking-[0.16em] text-ink-secondary">
                 <input
                   type="checkbox"
                   checked={hideHighCliche}
                   onChange={(e) => setHideHighCliche(e.target.checked)}
-                  className="size-4 accent-[#9EFF6B]"
+                  className="size-4 accent-accent"
                 />
                 Hide high cliché
               </label>
-              <label className="flex cursor-pointer items-center gap-2 font-mono text-[10px] uppercase tracking-[0.16em] text-[#A1A1A1]">
+              <label className="flex cursor-pointer items-center gap-2 font-sans text-[10px] uppercase tracking-[0.16em] text-ink-secondary">
                 <input
                   type="checkbox"
                   checked={lowClicheOnly}
                   onChange={(e) => setLowClicheOnly(e.target.checked)}
-                  className="size-4 accent-[#9EFF6B]"
+                  className="size-4 accent-accent"
                 />
                 Low cliché only
               </label>
@@ -525,15 +525,15 @@ export default function PromptBankApp({
         <div
           className={`motion-safe:transition-[max-height,opacity,padding] motion-safe:duration-300 motion-safe:ease-out motion-reduce:transition-none md:hidden ${
             mobileFiltersCollapsed
-              ? 'flex max-h-24 items-center gap-2 border-t border-[#2A2A2A]/80 px-4 py-2.5 opacity-100'
+              ? 'flex max-h-24 items-center gap-2 border-t border-border px-4 py-2.5 opacity-100'
               : 'pointer-events-none max-h-0 overflow-hidden border-transparent px-4 py-0 opacity-0'
           }`}
         >
           <div className="min-w-0 flex-1">
-            <p className="truncate font-mono text-[10px] uppercase tracking-[0.18em] text-[#9EFF6B]">
+            <p className="truncate font-sans text-[10px] uppercase tracking-[0.18em] text-accent">
               Prompt bank
             </p>
-            <p className="truncate text-xs text-[#A1A1A1]">
+            <p className="truncate text-xs text-ink-secondary">
               {activeFilterCount > 0 ? `${activeFilterCount} filter${activeFilterCount === 1 ? '' : 's'} on` : 'Browse prompts'}
             </p>
           </div>
@@ -541,7 +541,7 @@ export default function PromptBankApp({
             type="button"
             aria-label="Search prompts"
             onClick={expandMobileChromeAndFocusSearch}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#2A2A2A] bg-[#151515] text-[#A1A1A1] transition hover:border-[#9EFF6B]/35 hover:text-[#F5F5F5]"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-border bg-card text-ink-secondary transition hover:border-accent/30 hover:text-ink"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -562,7 +562,7 @@ export default function PromptBankApp({
             aria-expanded={!mobileFiltersCollapsed}
             aria-controls="prompt-bank-filter-panel"
             onClick={expandMobileChrome}
-            className="shrink-0 rounded-xl border border-[#9EFF6B]/45 bg-[#9EFF6B]/12 px-4 py-2 font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-[#E9FFB8] transition hover:bg-[#9EFF6B]/20"
+            className="shrink-0 rounded-xl border border-accent/40 bg-accent-soft px-4 py-2 font-sans text-[11px] font-semibold uppercase tracking-[0.14em] text-accent-ink transition hover:bg-accent-soft"
           >
             Filters
           </button>
@@ -571,14 +571,14 @@ export default function PromptBankApp({
 
       {/* lg+: viewport-fixed workspace; columns scroll independently. Below lg: natural document flow. */}
       <div className="mx-auto flex w-full max-w-[1400px] flex-col md:h-[calc(100dvh-20rem)] md:min-h-[240px] md:flex-row md:gap-8 md:overflow-hidden md:px-10 md:pb-5 md:pt-6 lg:h-[calc(100dvh-21rem)] lg:min-h-[260px] lg:gap-10 lg:px-12 lg:pb-6 lg:pt-8">
-        <aside className="shrink-0 border-[#2A2A2A] px-5 py-8 md:flex md:h-full md:w-[min(380px,42vw)] md:flex-none md:flex-col md:overflow-y-auto md:overscroll-y-contain md:border-r md:px-0 md:py-0 md:pr-6 lg:w-[min(400px,40vw)] lg:pr-8">
-          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-[#9EFF6B]">
+        <aside className="shrink-0 border-border px-5 py-8 md:flex md:h-full md:w-[min(380px,42vw)] md:flex-none md:flex-col md:overflow-y-auto md:overscroll-y-contain md:border-r md:px-0 md:py-0 md:pr-6 lg:w-[min(400px,40vw)] lg:pr-8">
+          <p className="font-sans text-[10px] font-bold uppercase tracking-[0.22em] text-accent">
             Prompt library
           </p>
           {filtered.length === 0 ? (
-            <div className="mt-10 rounded-2xl border border-dashed border-[#2A2A2A] bg-[#151515] p-10 text-center">
-              <p className="text-lg font-medium text-[#F5F5F5]">No matches</p>
-              <p className="mt-2 text-sm text-[#A1A1A1]">
+            <div className="mt-10 rounded-2xl border border-dashed border-border bg-card p-10 text-center">
+              <p className="text-lg font-medium text-ink">No matches</p>
+              <p className="mt-2 text-sm text-ink-secondary">
                 Adjust filters or search terms — nothing in the bank matches this combination.
               </p>
             </div>
@@ -586,7 +586,7 @@ export default function PromptBankApp({
             <div className="mt-6 space-y-10">
               {grouped.map(({ category: cat, items }) => (
                 <section key={cat}>
-                  <h2 className="sticky top-[var(--prompt-bank-sticky-h,8.25rem)] z-10 bg-[#0B0B0B]/95 py-2 ps-[0.35em] font-mono text-[10px] uppercase tracking-[0.22em] text-[#A1A1A1] backdrop-blur-sm md:sticky md:top-0 md:bg-[#0B0B0B]/98">
+                  <h2 className="sticky top-[var(--prompt-bank-sticky-h,8.25rem)] z-10 border-b border-transparent bg-page/88 py-2 ps-[0.35em] font-sans text-[10px] uppercase tracking-[0.22em] text-ink-secondary backdrop-blur-sm transition-colors duration-150 motion-reduce:transition-none md:sticky md:top-0 md:bg-page/95">
                     {cat}
                   </h2>
                   <ul className="mt-3 space-y-3">
@@ -601,12 +601,12 @@ export default function PromptBankApp({
                           <button
                             type="button"
                             onClick={() => selectPrompt(p.id)}
-                            className={`w-full rounded-2xl border px-4 py-4 text-left transition ${
+                            className={`w-full rounded-2xl border px-4 py-4 text-left transition-[border-color,box-shadow,ring-color] duration-200 ease-out motion-reduce:transition-none ${
                               selectedId === p.id
-                                ? 'border-[#9EFF6B]/55 bg-[#151515]'
+                                ? 'border-accent/55 bg-card ring-2 ring-accent/18 shadow-[var(--shadow-soft)]'
                                 : lockBoost
-                                  ? 'border-[#9EFF6B]/35 bg-[#151515] shadow-[0_0_28px_-14px_rgba(158,255,107,0.45)] hover:border-[#9EFF6B]/55'
-                                  : 'border-[#2A2A2A] bg-[#151515] hover:border-[#9EFF6B]/35'
+                                  ? 'border-accent/28 bg-card shadow-[var(--shadow-accent-lift)] hover:border-accent/45'
+                                  : 'border-border bg-card hover:border-accent/28'
                             }`}
                           >
                             <div className="flex items-start justify-between gap-2">
@@ -616,13 +616,13 @@ export default function PromptBankApp({
                               <span className="flex shrink-0 gap-1">
                                 {p.strength === 'Lock' || hasRecAnswer ? (
                                   <span
-                                    className="size-2 rounded-full bg-[#9EFF6B] shadow-[0_0_10px_rgba(158,255,107,0.85)]"
+                                    className="size-2 rounded-full bg-accent shadow-[var(--shadow-accent-dot)]"
                                     title="Lock leverage / recommended lane"
                                   />
                                 ) : null}
                                 {caution ? (
                                   <span
-                                    className="font-mono text-xs text-amber-200/90"
+                                    className="font-sans text-xs text-amber-800"
                                     title="Use carefully — add specificity or creativity"
                                   >
                                     !
@@ -632,23 +632,23 @@ export default function PromptBankApp({
                             </div>
                             <div className="mt-3 flex flex-wrap gap-2">
                               <span
-                                className={`rounded-full border px-2.5 py-0.5 font-mono text-[9px] uppercase tracking-wide ${STRENGTH_CARD[p.strength]}`}
+                                className={`rounded-full border px-2.5 py-0.5 font-sans text-[9px] uppercase tracking-wide ${STRENGTH_CARD[p.strength]}`}
                               >
                                 {p.strength}
                               </span>
                               {p.strategicRoles.slice(0, 3).map((r) => (
                                 <span
                                   key={r}
-                                  className="rounded-md border border-[#2A2A2A] px-2 py-0.5 font-mono text-[9px] uppercase tracking-wide text-[#A1A1A1]"
+                                  className="rounded-md border border-border px-2 py-0.5 font-sans text-[9px] uppercase tracking-wide text-ink-secondary"
                                 >
                                   {r}
                                 </span>
                               ))}
                             </div>
-                            <p className="mt-3 text-sm leading-snug text-[#A1A1A1]">
+                            <p className="mt-3 text-sm leading-snug text-ink-secondary">
                               {summarize(p.valueForJustin)}
                             </p>
-                            <p className="mt-2 font-mono text-[10px] text-[#6b6b6b]">
+                            <p className="mt-2 font-sans text-[10px] text-ink-soft">
                               {clicheFilterOn
                                 ? `${va.length === p.answers.length ? `${va.length}` : `${va.length}/${p.answers.length}`} answer${va.length === 1 ? '' : 's'} (cliché filter)`
                                 : `${p.answers.length} answer${p.answers.length === 1 ? '' : 's'}`}
@@ -664,16 +664,16 @@ export default function PromptBankApp({
           )}
         </aside>
 
-        <div className="flex min-h-0 min-w-0 flex-1 flex-col border-t border-[#2A2A2A] md:h-full md:border-t-0">
+        <div className="flex min-h-0 min-w-0 flex-1 flex-col border-t border-border md:h-full md:border-t-0">
           <main
             ref={detailRef}
             id="prompt-detail"
             className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain px-5 py-10 md:min-h-0 md:px-0 md:pb-10 md:pt-2 lg:min-h-0"
           >
             {!selected ? (
-              <div className="flex min-h-[320px] flex-col justify-center rounded-2xl border border-dashed border-[#2A2A2A] bg-[#151515]/40 p-12 lg:min-h-[min(320px,50vh)]">
-                <p className="text-xl font-semibold text-[#F5F5F5]">Select a prompt</p>
-                <p className="mt-3 max-w-[48ch] text-[#A1A1A1]">
+              <div className="flex min-h-[320px] flex-col justify-center rounded-2xl border border-dashed border-border bg-muted/70 p-12 lg:min-h-[min(320px,50vh)]">
+                <p className="text-xl font-semibold text-ink">Select a prompt</p>
+                <p className="mt-3 max-w-[48ch] text-ink-secondary">
                   Pick a card for strategic fit, why / when evaluation, voice-linked source material, and
                   answers — plus cliché checks and local notes.
                 </p>
@@ -696,13 +696,14 @@ export default function PromptBankApp({
               />
             )}
 
-            <section className="mx-auto mt-14 max-w-[1400px] border-t border-[#2A2A2A] pt-10 lg:mt-16 lg:max-w-none lg:pr-2 lg:pt-12">
+            <section className="mx-auto mt-14 max-w-[1400px] border-t border-border-soft pt-10 lg:mt-16 lg:max-w-none lg:pr-2 lg:pt-12">
+        <div className="stitch-rule mx-auto mb-8 max-w-xl opacity-[0.22] lg:max-w-none lg:px-2" aria-hidden />
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-[#9EFF6B]">
+            <p className="font-sans text-[10px] font-bold uppercase tracking-[0.22em] text-accent">
               Profile set builder
             </p>
-            <p className="mt-2 max-w-[56ch] text-sm text-[#A1A1A1]">
+            <p className="mt-2 max-w-[56ch] text-sm text-ink-secondary">
               Tray for three Hinge slots — paste-ready when you are. Pairings persist in this
               browser only.
             </p>
@@ -711,7 +712,7 @@ export default function PromptBankApp({
             <button
               type="button"
               onClick={() => clearFinalSet()}
-              className="rounded-lg border border-[#2A2A2A] px-4 py-2 font-mono text-[10px] uppercase tracking-wide text-[#A1A1A1] hover:border-[#9EFF6B]/35 hover:text-[#F5F5F5]"
+              className="rounded-lg border border-border px-4 py-2 font-sans text-[10px] uppercase tracking-wide text-ink-secondary hover:border-accent/30 hover:text-ink"
             >
               Clear
             </button>
@@ -719,19 +720,19 @@ export default function PromptBankApp({
               type="button"
               onClick={() => void copyFinalSet()}
               disabled={persisted.finalSet.length === 0}
-              className="rounded-lg bg-[#9EFF6B] px-4 py-2 font-mono text-[10px] font-semibold uppercase tracking-wide text-[#0B0B0B] disabled:opacity-40"
+              className="rounded-lg bg-accent px-4 py-2 font-sans text-[10px] font-semibold uppercase tracking-wide text-accent-ink transition-colors hover:bg-accent-hover disabled:opacity-40"
             >
               {copiedId === '__final__' ? 'Copied' : 'Copy set'}
             </button>
           </div>
         </div>
         {setNotice ? (
-          <p className="mt-4 rounded-xl border border-amber-900/50 bg-amber-950/30 px-4 py-3 font-mono text-xs text-amber-100">
+          <p className="mt-4 rounded-xl border border-amber-200/90 bg-amber-50 px-4 py-3 font-sans text-xs text-amber-950">
             {setNotice}
           </p>
         ) : null}
         {persisted.finalSet.length === 0 ? (
-          <p className="mt-6 rounded-2xl border border-dashed border-[#2A2A2A] bg-[#151515] p-8 text-center text-sm text-[#A1A1A1]">
+          <p className="mt-6 rounded-2xl border border-dashed border-border bg-card p-8 text-center text-sm text-ink-secondary">
             No slots yet. Use “Add to set” on an answer, or load a recommended build below.
           </p>
         ) : (
@@ -739,20 +740,20 @@ export default function PromptBankApp({
             {persisted.finalSet.map((s, i) => (
               <li
                 key={`${s.promptId}-${s.answerId}`}
-                className="rounded-2xl border border-[#2A2A2A] bg-[#151515] p-5"
+                className="rounded-2xl border border-border-soft bg-card p-5 ring-1 ring-ring-card shadow-[var(--shadow-soft)]"
               >
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
-                    <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#6b6b6b]">
+                    <p className="font-sans text-[10px] uppercase tracking-[0.18em] text-ink-soft">
                       Slot {i + 1}
                     </p>
                     <p className="mt-1 text-lg font-semibold">{s.promptText}</p>
-                    <p className="mt-3 text-base leading-relaxed text-[#F5F5F5]">{s.answerText}</p>
+                    <p className="mt-3 text-base leading-relaxed text-ink">{s.answerText}</p>
                   </div>
                   <button
                     type="button"
                     onClick={() => removeFromFinalSet(i)}
-                    className="shrink-0 rounded-lg border border-[#2A2A2A] px-3 py-2 font-mono text-[10px] uppercase tracking-wide text-[#A1A1A1] hover:border-red-900/50 hover:text-red-200"
+                    className="shrink-0 rounded-lg border border-border px-3 py-2 font-sans text-[10px] uppercase tracking-wide text-ink-secondary transition-colors hover:border-rose-warm/35 hover:text-rose-warm"
                   >
                     Remove
                   </button>
@@ -766,29 +767,29 @@ export default function PromptBankApp({
         </div>
       </div>
 
-      <section className="mx-auto max-w-[1400px] shrink-0 border-t border-[#2A2A2A] px-5 py-12 md:px-12">
-        <p className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-[#9EFF6B]">
+      <section className="mx-auto max-w-[1400px] shrink-0 border-t border-border px-5 py-12 md:px-12">
+        <p className="font-sans text-[10px] font-bold uppercase tracking-[0.22em] text-accent">
           Recommended starting sets
         </p>
-        <p className="mt-2 max-w-[60ch] text-sm text-[#A1A1A1]">
+        <p className="mt-2 max-w-[60ch] text-sm text-ink-secondary">
           Draft combinations tuned for balance — load into the tray, then iterate.
         </p>
         <div className="mt-8 grid gap-6 md:grid-cols-3">
           {PRESET_PROFILE_SETS.map((preset) => (
             <article
               key={preset.id}
-              className="rounded-2xl border border-[#2A2A2A] bg-[#151515] p-6"
+              className="rounded-2xl border border-border-soft bg-card p-6 ring-1 ring-ring-card shadow-[var(--shadow-soft)]"
             >
               <h3 className="text-lg font-semibold">{preset.title}</h3>
-              <p className="mt-2 text-sm text-[#A1A1A1]">{preset.description}</p>
+              <p className="mt-2 text-sm text-ink-secondary">{preset.description}</p>
               <ol className="mt-5 space-y-3 text-sm">
                 {preset.slots.map((slot, idx) => {
                   const pr = prompts.find((x) => x.id === slot.promptId)
                   const ans = pr?.answers.find((a) => a.id === slot.answerId)
                   return (
-                    <li key={`${preset.id}-${idx}`} className="border-l border-[#2A2A2A] pl-3">
-                      <p className="font-medium text-[#F5F5F5]">{pr?.prompt ?? slot.promptId}</p>
-                      <p className="mt-1 text-[#A1A1A1]">{ans?.text ?? '—'}</p>
+                    <li key={`${preset.id}-${idx}`} className="border-l border-border pl-3">
+                      <p className="font-medium text-ink">{pr?.prompt ?? slot.promptId}</p>
+                      <p className="mt-1 text-ink-secondary">{ans?.text ?? '—'}</p>
                     </li>
                   )
                 })}
@@ -796,7 +797,7 @@ export default function PromptBankApp({
               <button
                 type="button"
                 onClick={() => applyPresetSlots(preset.slots)}
-                className="mt-6 w-full rounded-lg border border-[#9EFF6B]/45 bg-[#0B0B0B] py-3 font-mono text-[10px] font-semibold uppercase tracking-wide text-[#9EFF6B] hover:bg-[#9EFF6B]/10"
+                className="mt-6 w-full rounded-lg border border-accent/40 bg-page py-3 font-sans text-[10px] font-semibold uppercase tracking-wide text-accent hover:bg-accent-soft"
               >
                 Load into builder
               </button>
@@ -804,15 +805,6 @@ export default function PromptBankApp({
           ))}
         </div>
       </section>
-
-      <footer className="shrink-0 border-t border-[#2A2A2A] px-5 py-8 md:px-12">
-        <p className="font-mono text-[10px] text-[#6b6b6b]">
-          Workshop slides:{' '}
-          <a href="#workshop" className="text-[#9EFF6B] underline-offset-4 hover:underline">
-            #workshop
-          </a>
-        </p>
-      </footer>
     </div>
   )
 }
@@ -821,7 +813,7 @@ function AnswerAuthorBadge({ author }: { author: AnswerAuthor }) {
   if (author === 'human') {
     return (
       <span
-        className="rounded-md border border-sky-500/40 bg-sky-950/35 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wide text-sky-100/90"
+        className="rounded-md border border-lilac/35 bg-lilac-soft px-2 py-0.5 font-sans text-[10px] uppercase tracking-wide text-lilac"
         title="Hand-written line (prioritized in this list)"
       >
         Human
@@ -830,7 +822,7 @@ function AnswerAuthorBadge({ author }: { author: AnswerAuthor }) {
   }
   return (
     <span
-      className="rounded-md border border-[#3a3a3a] bg-[#141414] px-2 py-0.5 font-mono text-[10px] uppercase tracking-wide text-[#888888]"
+      className="rounded-md border border-border bg-card-inner px-2 py-0.5 font-sans text-[10px] uppercase tracking-wide text-ink-soft"
       title="AI-assisted catalog draft"
     >
       AI
@@ -846,9 +838,9 @@ function resolveAnswerTier(a: Answer): AnswerTier | null {
 
 function AnswerTierPill({ tier }: { tier: AnswerTier }) {
   const styles: Record<AnswerTier, string> = {
-    recommended: 'border-[#9EFF6B]/45 text-[#9EFF6B] bg-[#9EFF6B]/[0.06]',
-    experimental: 'border-[#3a3a3a] text-[#cfcfcf] bg-[#141414]',
-    needs_work: 'border-amber-800/55 text-amber-100/85 bg-amber-950/25',
+    recommended: 'border-accent/40 text-accent bg-accent-soft',
+    experimental: 'border-border text-ink-secondary bg-card-inner',
+    needs_work: 'border-amber-200/95 text-amber-950 bg-amber-50',
   }
   const labels: Record<AnswerTier, string> = {
     recommended: 'Recommended',
@@ -857,7 +849,7 @@ function AnswerTierPill({ tier }: { tier: AnswerTier }) {
   }
   return (
     <span
-      className={`rounded-md border px-2 py-0.5 font-mono text-[10px] uppercase tracking-wide ${styles[tier]}`}
+      className={`rounded-md border px-2 py-0.5 font-sans text-[10px] uppercase tracking-wide ${styles[tier]}`}
     >
       {labels[tier]}
     </span>
@@ -867,10 +859,10 @@ function AnswerTierPill({ tier }: { tier: AnswerTier }) {
 function ClicheDot({ level }: { level: ClicheLevel }) {
   const cls =
     level === 'low'
-      ? 'bg-emerald-500/85 ring-1 ring-emerald-400/35'
+      ? 'bg-sage/90 ring-1 ring-sage/40'
       : level === 'medium'
-        ? 'bg-amber-400/95 ring-1 ring-amber-300/45'
-        : 'bg-red-500/90 ring-1 ring-red-400/50'
+        ? 'bg-amber-300/95 ring-1 ring-amber-200/70'
+        : 'bg-accent/90 ring-1 ring-accent/35'
   const label = level === 'low' ? 'Low cliché risk' : level === 'medium' ? 'Medium cliché risk' : 'High cliché risk'
   return (
     <span title={label} className={`inline-block size-2 shrink-0 rounded-full ${cls}`} aria-hidden />
@@ -910,35 +902,35 @@ function PromptDetail({
 
   const STRENGTH_STYLES: Record<Strength, string> = {
     Lock:
-      'border-[#9EFF6B]/75 bg-[#9EFF6B]/14 text-[#E9FFB8] shadow-[0_0_18px_-8px_rgba(158,255,107,0.55)]',
-    Strong: 'border-[#9EFF6B]/30 bg-[#141414] text-[#C8F5A8]',
-    Useful: 'border-[#2A2A2A] bg-[#151515] text-[#A1A1A1]',
-    'Use Carefully': 'border-amber-900/50 bg-amber-950/24 text-amber-100/90',
+      'border-accent/50 bg-accent-soft text-accent-ink shadow-[var(--shadow-accent-pin)]',
+    Strong: 'border-accent/28 bg-card-inner text-sage',
+    Useful: 'border-border bg-card text-ink-secondary',
+    'Use Carefully': 'border-amber-200/95 bg-amber-50 text-amber-950',
   }
 
   return (
     <div className="max-w-3xl pb-12">
       <div className="flex flex-wrap items-start gap-2 md:gap-3">
-        <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">{selected.prompt}</h2>
+        <h2 className="font-display text-3xl font-semibold tracking-[0.015em] md:text-4xl">{selected.prompt}</h2>
         <span
-          className={`rounded-full border px-3 py-1 font-mono text-[10px] uppercase tracking-wide ${STRENGTH_STYLES[selected.strength]}`}
+          className={`rounded-full border px-3 py-1 font-sans text-[10px] uppercase tracking-wide ${STRENGTH_STYLES[selected.strength]}`}
         >
           {selected.strength}
         </span>
         {selected.strength === 'Lock' ? (
-          <span className="rounded-full border border-[#9EFF6B]/50 bg-[#9EFF6B]/10 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-[#9EFF6B]">
+          <span className="rounded-full border border-accent/40 bg-accent-soft px-3 py-1 font-sans text-[10px] uppercase tracking-[0.12em] text-accent">
             Recommended core prompt
           </span>
         ) : null}
         {selected.creativeOpportunity ? (
-          <span className="rounded-full border border-sky-800/50 bg-sky-950/30 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-sky-100/90">
+          <span className="rounded-full border border-lilac/30 bg-lilac-soft px-3 py-1 font-sans text-[10px] uppercase tracking-[0.12em] text-lilac">
             Creative opportunity
           </span>
         ) : null}
       </div>
-      <p className="mt-2 font-mono text-xs text-[#A1A1A1]">{selected.category}</p>
+      <p className="mt-2 font-sans text-xs text-ink-secondary">{selected.category}</p>
       {selected.strength === 'Use Carefully' ? (
-        <p className="mt-3 max-w-[56ch] text-sm leading-snug text-[#888888]">
+        <p className="mt-3 max-w-[56ch] text-sm leading-snug text-ink-soft">
           Works when used creatively or specifically — treat this as a challenge prompt, not a dead slot.
         </p>
       ) : null}
@@ -947,7 +939,7 @@ function PromptDetail({
         {selected.strategicRoles.map((r) => (
           <span
             key={r}
-            className="rounded-lg border border-[#2A2A2A] bg-[#151515] px-3 py-1 font-mono text-[10px] uppercase tracking-wider text-[#A1A1A1]"
+            className="rounded-lg border border-border bg-card px-3 py-1 font-sans text-[10px] uppercase tracking-wider text-ink-secondary"
           >
             {r}
           </span>
@@ -956,17 +948,17 @@ function PromptDetail({
 
       <section className="mt-10 space-y-10">
         <div>
-          <h3 className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-[#9EFF6B]">
+          <h3 className="font-sans text-[10px] font-bold uppercase tracking-[0.22em] text-accent">
             Strategic fit (Justin)
           </h3>
-          <p className="mt-3 text-base leading-relaxed text-[#F5F5F5]">{selected.valueForJustin}</p>
+          <p className="mt-3 text-base leading-relaxed text-ink">{selected.valueForJustin}</p>
         </div>
 
         <div>
-          <h3 className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-[#9EFF6B]">
+          <h3 className="font-sans text-[10px] font-bold uppercase tracking-[0.22em] text-accent">
             Why it works
           </h3>
-          <ul className="mt-3 list-inside list-disc space-y-2 text-sm leading-relaxed text-[#A1A1A1]">
+          <ul className="mt-3 list-inside list-disc space-y-2 text-sm leading-relaxed text-ink-secondary">
             {selected.promptEvaluation.whyItWorks.map((line, i) => (
               <li key={`yw-${i}-${line.slice(0, 40)}`}>{line}</li>
             ))}
@@ -974,10 +966,10 @@ function PromptDetail({
         </div>
 
         <div>
-          <h3 className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-[#A1A1A1]">
+          <h3 className="font-sans text-[10px] font-bold uppercase tracking-[0.22em] text-ink-secondary">
             When it falls flat
           </h3>
-          <ul className="mt-3 list-inside list-disc space-y-2 text-sm leading-relaxed text-[#888888]">
+          <ul className="mt-3 list-inside list-disc space-y-2 text-sm leading-relaxed text-ink-soft">
             {selected.promptEvaluation.whenItFails.map((line, i) => (
               <li key={`wf-${i}-${line.slice(0, 40)}`}>{line}</li>
             ))}
@@ -985,12 +977,12 @@ function PromptDetail({
         </div>
 
         {selected.redditSignal ? (
-          <div className="rounded-xl border border-[#2A2A2A]/80 bg-[#0f0f0f]/80 px-4 py-3 opacity-[0.72]">
-            <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.2em] text-[#5c5c5c]">
+          <div className="rounded-xl border border-border-soft bg-muted/80 px-4 py-3">
+            <p className="font-sans text-[9px] font-semibold uppercase tracking-[0.2em] text-ink-secondary">
               External signal (subjective)
             </p>
-            <p className="mt-2 font-sans text-xs leading-relaxed text-[#6f6f6f]">{selected.redditSignal}</p>
-            <p className="mt-2 font-mono text-[9px] text-[#4a4a4a]">
+            <p className="mt-2 font-sans text-xs leading-relaxed text-ink-secondary">{selected.redditSignal}</p>
+            <p className="mt-2 font-sans text-[9px] text-ink-soft">
               Community chatter only — not a driver for strength or recommendations here.
             </p>
           </div>
@@ -1001,30 +993,30 @@ function PromptDetail({
         <button
           type="button"
           onClick={() => setShowSource((v) => !v)}
-          className="rounded-xl border border-[#2A2A2A] bg-[#151515] px-4 py-2.5 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[#F5F5F5] transition hover:border-[#9EFF6B]/45"
+          className="rounded-xl border border-border bg-card px-4 py-2.5 font-sans text-[10px] font-semibold uppercase tracking-[0.14em] text-ink transition hover:border-accent/40"
         >
           {showSource ? 'Hide source' : 'Show source'}
         </button>
-        <span className="font-mono text-[10px] text-[#6b6b6b]">Quotes · voice · themes</span>
+        <span className="font-sans text-[10px] text-ink-soft">Quotes · voice · themes</span>
       </div>
 
       {showSource ? (
-        <div className="mt-8 space-y-10 border-l border-[#2A2A2A] pl-5">
+        <div className="mt-8 space-y-10 border-l border-border pl-5">
           <section>
-            <h3 className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-[#9EFF6B]">
+            <h3 className="font-sans text-[10px] font-bold uppercase tracking-[0.22em] text-accent">
               Source language
             </h3>
-            <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.16em] text-[#6b6b6b]">
+            <p className="mt-2 font-sans text-[10px] uppercase tracking-[0.16em] text-ink-soft">
               What Justin actually said
             </p>
             {selected.sourceQuotes.length === 0 ? (
-              <p className="mt-4 text-sm text-[#6b6b6b]">No verbatim quotes linked yet.</p>
+              <p className="mt-4 text-sm text-ink-soft">No verbatim quotes linked yet.</p>
             ) : (
               <ul className="mt-4 space-y-2">
                 {selected.sourceQuotes.map((q, i) => (
                   <li
                     key={`${i}-${q.slice(0, 24)}`}
-                    className="text-sm leading-snug text-[#888888]"
+                    className="text-sm leading-snug text-ink-soft"
                   >
                     “{q}”
                   </li>
@@ -1034,20 +1026,20 @@ function PromptDetail({
           </section>
 
           <section>
-            <h3 className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-[#9EFF6B]">
+            <h3 className="font-sans text-[10px] font-bold uppercase tracking-[0.22em] text-accent">
               Voice
             </h3>
-            <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.16em] text-[#6b6b6b]">
+            <p className="mt-2 font-sans text-[10px] uppercase tracking-[0.16em] text-ink-soft">
               How Justin actually talks
             </p>
             {selected.voiceFragments.length === 0 ? (
-              <p className="mt-4 text-sm text-[#6b6b6b]">No voice passages linked yet.</p>
+              <p className="mt-4 text-sm text-ink-soft">No voice passages linked yet.</p>
             ) : (
               <div className="mt-5 space-y-5">
                 {selected.voiceFragments.map((frag, i) => (
                   <p
                     key={`${i}-${frag.slice(0, 16)}`}
-                    className="text-[15px] leading-relaxed text-[#cfcfcf] md:text-base"
+                    className="text-[15px] leading-relaxed text-ink-secondary md:text-base"
                   >
                     {frag}
                   </p>
@@ -1057,13 +1049,13 @@ function PromptDetail({
           </section>
 
           <section>
-            <h3 className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-[#9EFF6B]">
+            <h3 className="font-sans text-[10px] font-bold uppercase tracking-[0.22em] text-accent">
               Themes
             </h3>
             {selected.themes.length === 0 ? (
-              <p className="mt-4 text-sm text-[#6b6b6b]">No distilled themes yet.</p>
+              <p className="mt-4 text-sm text-ink-soft">No distilled themes yet.</p>
             ) : (
-              <ul className="mt-4 list-inside list-disc space-y-1.5 text-sm text-[#A1A1A1]">
+              <ul className="mt-4 list-inside list-disc space-y-1.5 text-sm text-ink-secondary">
                 {selected.themes.map((t) => (
                   <li key={t}>{t}</li>
                 ))}
@@ -1074,15 +1066,15 @@ function PromptDetail({
       ) : null}
 
       <section className="mt-14">
-        <h3 className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-[#9EFF6B]">
+        <h3 className="font-sans text-[10px] font-bold uppercase tracking-[0.22em] text-accent">
           Refined answers
         </h3>
-        <p className="mt-2 max-w-[52ch] font-mono text-[10px] leading-relaxed text-[#6b6b6b]">
+        <p className="mt-2 max-w-[52ch] font-sans text-[10px] leading-relaxed text-ink-soft">
           Human-authored lines sort first; each card shows an AI vs Human badge. Cliché risk is separate
           from tier / voice alignment.
         </p>
         {filteredAnswers.length === 0 ? (
-          <p className="mt-8 rounded-2xl border border-dashed border-[#2A2A2A] bg-[#151515] p-8 text-center text-sm text-[#A1A1A1]">
+          <p className="mt-8 rounded-2xl border border-dashed border-border bg-card p-8 text-center text-sm text-ink-secondary">
             No answers match the cliché filters. Toggle filters above or pick another prompt.
           </p>
         ) : (
@@ -1096,13 +1088,13 @@ function PromptDetail({
               const tierRecommendedLane = resolvedTier === 'recommended'
 
               return (
-                <li key={a.id} className="rounded-2xl border border-[#2A2A2A] bg-[#151515] p-6">
+                <li key={a.id} className="rounded-2xl border border-border-soft bg-card p-6 ring-1 ring-ring-card shadow-[var(--shadow-soft)] transition-[box-shadow,transform] duration-300 ease-out hover:-translate-y-[1px] hover:shadow-[var(--shadow-card)] motion-reduce:transition-none motion-reduce:hover:translate-y-0">
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div className="flex min-w-0 flex-1 flex-wrap items-start gap-2">
                       <span className="mt-2 shrink-0" title={clicheHintTitle}>
                         <ClicheDot level={a.clicheLevel} />
                       </span>
-                      <p className="max-w-prose min-w-0 text-xl font-medium leading-snug tracking-tight text-[#F5F5F5] md:text-[1.35rem]">
+                      <p className="max-w-prose min-w-0 text-xl font-medium leading-snug tracking-tight text-ink md:text-[1.35rem]">
                         {a.text}
                       </p>
                     </div>
@@ -1112,44 +1104,44 @@ function PromptDetail({
                     </div>
                   </div>
                   {tierRecommendedLane && a.clicheLevel === 'high' ? (
-                    <p className="mt-3 border-l border-amber-800/40 pl-3 text-xs leading-snug text-amber-100/85">
+                    <p className="mt-3 border-l-2 border-amber-200/90 bg-amber-50/60 pl-3 text-xs leading-snug text-amber-950">
                       Strong tier lane, but this still reads generic on the page — worth rewriting for
                       specificity.
                     </p>
                   ) : tierRecommendedLane && a.clicheLevel === 'medium' ? (
-                    <p className="mt-3 border-l border-amber-800/40 pl-3 text-xs leading-snug text-amber-100/85">
+                    <p className="mt-3 border-l-2 border-amber-200/90 bg-amber-50/60 pl-3 text-xs leading-snug text-amber-950">
                       Decent tier lane, but watch generic rhythm — one concrete beat would sharpen voice
                       alignment.
                     </p>
                   ) : null}
                   {resolvedTier === 'needs_work' && a.clicheLevel === 'low' ? (
-                    <p className="mt-3 border-l border-[#2A2A2A] pl-3 text-xs leading-snug text-[#888888]">
+                    <p className="mt-3 border-l border-border pl-3 text-xs leading-snug text-ink-soft">
                       Lower cliché risk — delivery still flagged needs_work (tone, length, or prompt fit).
                     </p>
                   ) : null}
-                  <details className="mt-3 rounded-lg border border-[#2A2A2A]/80 bg-[#0B0B0B]/80 px-3 py-2">
-                    <summary className="cursor-pointer font-mono text-[10px] uppercase tracking-[0.14em] text-[#A1A1A1] marker:text-[#6b6b6b]">
+                  <details className="mt-3 rounded-lg border border-border bg-card-inner/92 px-3 py-2">
+                    <summary className="cursor-pointer font-sans text-[10px] uppercase tracking-[0.14em] text-ink-secondary marker:text-ink-soft">
                       Cliché notes ({a.clicheLevel})
                     </summary>
-                    <ul className="mt-2 list-inside list-disc space-y-1 text-xs text-[#A1A1A1]">
+                    <ul className="mt-2 list-inside list-disc space-y-1 text-xs text-ink-secondary">
                       {(a.clicheReasons ?? []).map((r) => (
                         <li key={r}>{r}</li>
                       ))}
                     </ul>
                   </details>
-                  <details className="mt-3 rounded-lg border border-[#9EFF6B]/20 bg-[#0B0B0B]/80 px-3 py-2">
-                    <summary className="cursor-pointer font-mono text-[10px] uppercase tracking-[0.14em] text-[#9EFF6B] marker:text-[#6b6b6b]">
+                  <details className="mt-3 rounded-lg border border-accent/22 bg-card-inner/92 px-3 py-2">
+                    <summary className="cursor-pointer font-sans text-[10px] uppercase tracking-[0.14em] text-accent marker:text-ink-soft">
                       Refine in Justin&apos;s voice
                     </summary>
-                    <ul className="mt-2 space-y-1.5 text-xs leading-snug text-[#A1A1A1]">
+                    <ul className="mt-2 space-y-1.5 text-xs leading-snug text-ink-secondary">
                       <li>Cut cliché phrases; replace with one concrete image, time, place, or behavior.</li>
                       <li>
-                        Borrow rhythm from <strong className="font-medium text-[#cfcfcf]">Show source → Voice</strong>{' '}
+                        Borrow rhythm from <strong className="font-medium text-ink-secondary">Show source → Voice</strong>{' '}
                         above — only lines that truly fit this prompt.
                       </li>
                       <li>Add contrast or a two-beat micro-story instead of a trait list.</li>
                       <li>
-                        Target <strong className="font-medium text-[#cfcfcf]">low cliché + strong alignment</strong>{' '}
+                        Target <strong className="font-medium text-ink-secondary">low cliché + strong alignment</strong>{' '}
                         (tier is one signal; high cliché + high tier is still a miss).
                       </li>
                     </ul>
@@ -1158,13 +1150,13 @@ function PromptDetail({
                     {a.tags.map((t) => (
                       <span
                         key={t}
-                        className="rounded-md bg-[#0B0B0B] px-2 py-0.5 font-mono text-[10px] text-[#A1A1A1]"
+                        className="rounded-md bg-page px-2 py-0.5 font-sans text-[10px] text-ink-secondary"
                       >
                         {t}
                       </span>
                     ))}
                     {a.favorite ? (
-                      <span className="rounded-md border border-[#9EFF6B]/35 px-2 py-0.5 font-mono text-[10px] text-[#9EFF6B]">
+                      <span className="rounded-md border border-accent/30 px-2 py-0.5 font-sans text-[10px] text-accent">
                         favorite
                       </span>
                     ) : null}
@@ -1178,17 +1170,17 @@ function PromptDetail({
                     <button
                       type="button"
                       onClick={() => void onCopy(a.text, a.id)}
-                      className="rounded-lg border border-[#2A2A2A] bg-[#0B0B0B] px-3 py-2 font-mono text-xs uppercase tracking-wide text-[#F5F5F5] transition hover:border-[#9EFF6B]/45"
+                      className="rounded-lg border border-border bg-page px-3 py-2 font-sans text-xs uppercase tracking-wide text-ink transition hover:border-accent/40"
                     >
                       {copiedId === a.id ? 'Copied' : 'Copy'}
                     </button>
                     <button
                       type="button"
                       onClick={() => onToggleFavorite(a.id, a.favorite)}
-                      className={`rounded-lg border px-3 py-2 font-mono text-xs uppercase tracking-wide transition ${
+                      className={`rounded-lg border px-3 py-2 font-sans text-xs uppercase tracking-wide transition ${
                         a.favorite
-                          ? 'border-[#9EFF6B]/55 text-[#9EFF6B]'
-                          : 'border-[#2A2A2A] text-[#A1A1A1] hover:border-[#9EFF6B]/35'
+                          ? 'border-accent/45 text-accent'
+                          : 'border-border text-ink-secondary hover:border-accent/30'
                       }`}
                     >
                       Favorite
@@ -1196,10 +1188,10 @@ function PromptDetail({
                     <button
                       type="button"
                       onClick={() => onToggleRecommended(a.id, a.recommended)}
-                      className={`rounded-lg border px-3 py-2 font-mono text-xs uppercase tracking-wide transition ${
+                      className={`rounded-lg border px-3 py-2 font-sans text-xs uppercase tracking-wide transition ${
                         a.recommended
-                          ? 'border-[#9EFF6B]/55 text-[#9EFF6B]'
-                          : 'border-[#2A2A2A] text-[#A1A1A1] hover:border-[#9EFF6B]/35'
+                          ? 'border-accent/45 text-accent'
+                          : 'border-border text-ink-secondary hover:border-accent/30'
                       }`}
                     >
                       Rec / lock
@@ -1207,7 +1199,7 @@ function PromptDetail({
                     <button
                       type="button"
                       onClick={() => onAddToSet(selected, a.id, a.text)}
-                      className="rounded-lg border border-[#2A2A2A] px-3 py-2 font-mono text-xs uppercase tracking-wide text-[#F5F5F5] transition hover:border-[#9EFF6B]/45"
+                      className="rounded-lg border border-border px-3 py-2 font-sans text-xs uppercase tracking-wide text-ink transition hover:border-accent/40"
                     >
                       Add to set
                     </button>
@@ -1218,8 +1210,8 @@ function PromptDetail({
           </ul>
         )}
 
-        <div className="mt-10 rounded-2xl border border-[#2A2A2A] bg-[#151515] p-5">
-          <h4 className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#A1A1A1]">
+        <div className="mt-10 rounded-2xl border border-border-soft bg-card p-5 shadow-[var(--shadow-soft)]">
+          <h4 className="font-sans text-[10px] font-bold uppercase tracking-[0.2em] text-ink-secondary">
             Add answer (local)
           </h4>
           <textarea
@@ -1227,7 +1219,7 @@ function PromptDetail({
             onChange={(e) => setNewAnswerDraft(e.target.value)}
             rows={3}
             placeholder="Draft a new line. Saved in this browser only."
-            className="mt-3 w-full resize-y rounded-xl border border-[#2A2A2A] bg-[#0B0B0B] px-4 py-3 text-sm text-[#F5F5F5] outline-none focus:border-[#9EFF6B]/45"
+            className="mt-3 w-full resize-y rounded-xl border border-border bg-page px-4 py-3 text-sm text-ink outline-none focus:border-accent/40"
           />
           <button
             type="button"
@@ -1235,7 +1227,7 @@ function PromptDetail({
               onAddCustomAnswer(selected.id, newAnswerDraft)
               setNewAnswerDraft('')
             }}
-            className="mt-3 rounded-lg bg-[#9EFF6B] px-4 py-2 font-mono text-xs font-semibold uppercase tracking-wide text-[#0B0B0B] transition hover:bg-[#b8ff8f]"
+            className="mt-3 rounded-lg bg-accent px-4 py-2 font-sans text-xs font-semibold uppercase tracking-wide text-accent-ink transition-colors hover:bg-accent-hover"
           >
             Save answer
           </button>

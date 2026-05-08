@@ -1,21 +1,10 @@
-import { useEffect, useState } from 'react'
 import JustinWorkspace from './JustinWorkspace'
-import WorkshopDeck from './WorkshopDeck'
+import { ThemeProvider } from './theme/ThemeProvider'
 
 export default function App() {
-  const [mode, setMode] = useState<'prompt' | 'workshop'>(() =>
-    typeof window !== 'undefined' && window.location.hash === '#workshop'
-      ? 'workshop'
-      : 'prompt',
+  return (
+    <ThemeProvider>
+      <JustinWorkspace />
+    </ThemeProvider>
   )
-
-  useEffect(() => {
-    const sync = () =>
-      setMode(window.location.hash === '#workshop' ? 'workshop' : 'prompt')
-    sync()
-    window.addEventListener('hashchange', sync)
-    return () => window.removeEventListener('hashchange', sync)
-  }, [])
-
-  return mode === 'workshop' ? <WorkshopDeck /> : <JustinWorkspace />
 }

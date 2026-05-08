@@ -79,29 +79,31 @@ export default function SaveProgressTab() {
   return (
     <div className="min-h-[calc(100dvh-52px)] px-5 py-8 pb-16 md:px-12">
       <header className="max-w-2xl">
-        <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-[#9EFF6B]">
+        <p className="font-sans text-[10px] uppercase tracking-[0.28em] text-accent">
           Extra Good · Backup
         </p>
-        <h1 className="mt-3 text-2xl font-semibold tracking-tight md:text-3xl">Save progress</h1>
-        <p className="mt-3 text-sm leading-relaxed text-[#A1A1A1]">
+        <h1 className="mt-3 font-display text-2xl font-semibold tracking-[0.015em] md:text-3xl">Save progress</h1>
+        <p className="mt-3 text-sm leading-relaxed text-ink-secondary">
           Everything lives in this browser until you export. Grab a JSON backup before clearing data,
           switching devices, or sharing work with the team.
         </p>
       </header>
 
-      <section className="mt-10 max-w-xl rounded-2xl border border-[#2A2A2A] bg-[#111]/90 p-6 shadow-[0_0_0_1px_rgba(255,255,255,0.02)_inset]">
-        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#9EFF6B]">
+      <div className="stitch-rule mx-auto mt-2 max-w-2xl opacity-[0.22]" aria-hidden />
+
+      <section className="card-stock mt-10 max-w-xl rounded-2xl border border-border-soft bg-card p-6">
+        <p className="font-sans text-[10px] uppercase tracking-[0.2em] text-accent">
           Local storage
         </p>
-        <p className="mt-3 text-sm leading-relaxed text-[#A1A1A1]">
+        <p className="mt-3 text-sm leading-relaxed text-ink-secondary">
           Saved locally in this browser only. Export a backup if you want to keep or share your
           work (prompt bank + match tracker + Signal Report notes).
         </p>
 
         {banner ? (
           <p
-            className={`mt-5 font-mono text-[11px] leading-snug ${
-              banner.kind === 'err' ? 'text-red-300/95' : 'text-[#9EFF6B]'
+            className={`mt-5 font-sans text-[11px] leading-snug ${
+              banner.kind === 'err' ? 'text-red-700' : 'text-accent'
             }`}
           >
             {banner.text}
@@ -112,14 +114,14 @@ export default function SaveProgressTab() {
           <button
             type="button"
             onClick={handleExport}
-            className="rounded-xl border border-[#9EFF6B]/45 bg-[#9EFF6B]/10 px-5 py-3 font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-[#9EFF6B] transition hover:bg-[#9EFF6B]/18"
+            className="rounded-xl border border-accent/40 bg-accent-soft px-5 py-3 font-sans text-[11px] font-semibold uppercase tracking-[0.14em] text-accent-ink transition-colors hover:bg-accent-soft"
           >
             Export project
           </button>
           <button
             type="button"
             onClick={handleImportPick}
-            className="rounded-xl border border-[#2A2A2A] bg-[#151515] px-5 py-3 font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-[#F5F5F5] transition hover:border-[#9EFF6B]/35"
+            className="rounded-xl border border-border bg-card px-5 py-3 font-sans text-[11px] font-semibold uppercase tracking-[0.14em] text-ink transition hover:border-accent/30"
           >
             Import project
           </button>
@@ -133,13 +135,13 @@ export default function SaveProgressTab() {
           <button
             type="button"
             onClick={handleReset}
-            className="rounded-xl border border-[#2A2A2A] px-5 py-3 font-mono text-[11px] uppercase tracking-[0.14em] text-[#888888] transition hover:border-red-900/55 hover:text-red-200/90"
+            className="rounded-xl border border-border px-5 py-3 font-sans text-[11px] uppercase tracking-[0.14em] text-ink-soft transition-colors hover:border-rose-warm/35 hover:text-rose-warm"
           >
             Reset local edits
           </button>
         </div>
 
-        <p className="mt-8 text-xs leading-relaxed text-[#6b6b6b]">
+        <p className="mt-8 text-xs leading-relaxed text-ink-soft">
           Reset clears prompt bank customizations in this browser only. It does not remove Match
           Tracker entries — use export/import if you need a full snapshot or wipe matches via Match
           Tracker.

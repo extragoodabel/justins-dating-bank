@@ -39,26 +39,26 @@ function preview(text: string | undefined, max = 96): string {
 function fitChipClass(r: FitSignalRating): string {
   switch (r) {
     case 'Strong':
-      return 'border-[#9EFF6B]/55 bg-[#9EFF6B]/12 text-[#C8F5A8]'
+      return 'border-accent/45 bg-accent-soft text-sage'
     case 'Possible':
-      return 'border-[#9EFF6B]/22 bg-[#151515] text-[#A8C990]'
+      return 'border-sage/28 bg-sage-soft text-sage'
     case 'Unclear':
-      return 'border-[#2A2A2A] bg-[#151515] text-[#8a8a8a]'
+      return 'border-border bg-card text-ink-soft'
     case 'Mismatch':
-      return 'border-amber-800/45 bg-amber-950/28 text-amber-100/85'
+      return 'border-rose-warm/30 bg-rose-soft text-rose-warm'
   }
 }
 
 function overallClass(fit: OverallFit): string {
   switch (fit) {
     case 'High Fit':
-      return 'border-[#9EFF6B]/45 bg-[#9EFF6B]/10 text-[#C8F5A8]'
+      return 'border-accent/40 bg-accent-soft text-sage'
     case 'Possible Fit':
-      return 'border-[#9EFF6B]/18 bg-[#151515] text-[#cbcbcb]'
+      return 'border-sage/22 bg-sage-soft text-sage'
     case 'Low Fit':
-      return 'border-amber-800/40 bg-amber-950/22 text-amber-100/80'
+      return 'border-amber-200/90 bg-amber-50 text-amber-950'
     case 'Too Early':
-      return 'border-[#2A2A2A] bg-[#151515] text-[#A1A1A1]'
+      return 'border-border bg-card text-ink-secondary'
   }
 }
 
@@ -91,10 +91,10 @@ function emptyDateNote(): DateNote {
 }
 
 const inputClass =
-  'mt-2 w-full rounded-xl border border-[#2A2A2A] bg-[#151515] px-3 py-2 text-sm text-[#F5F5F5] outline-none placeholder:text-[#6b6b6b] focus:border-[#9EFF6B]/45'
-const labelClass = 'block font-mono text-[10px] uppercase tracking-[0.18em] text-[#A1A1A1]'
+  'mt-2 w-full rounded-xl border border-border bg-card px-3 py-2 text-sm text-ink outline-none placeholder:text-ink-soft focus:border-accent/40'
+const labelClass = 'block font-sans text-[10px] uppercase tracking-[0.18em] text-ink-secondary'
 const sectionClass =
-  'rounded-2xl border border-[#2A2A2A] bg-[#111]/90 p-5 shadow-[0_0_0_1px_rgba(255,255,255,0.02)_inset]'
+  'card-stock rounded-2xl border border-border-soft bg-card p-5'
 
 export default function MatchTrackerTab() {
   const { prompts } = usePromptBankPersistenceContext()
@@ -213,20 +213,21 @@ export default function MatchTrackerTab() {
 
   return (
     <div className="flex min-h-[calc(100dvh-52px)] flex-col">
-      <header className="border-b border-[#2A2A2A] px-5 py-8 md:px-12">
-        <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-[#9EFF6B]">
+      <header className="border-b border-border px-5 py-8 md:px-12">
+        <p className="font-sans text-[10px] uppercase tracking-[0.28em] text-accent">
           Extra Good · Match notes
         </p>
-        <h1 className="mt-3 text-2xl font-semibold tracking-tight md:text-3xl">
+        <h1 className="mt-3 font-display text-2xl font-semibold tracking-[0.015em] md:text-3xl">
           Match Tracker
         </h1>
-        <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[#A1A1A1]">
+        <p className="mt-3 max-w-2xl text-sm leading-relaxed text-ink-secondary">
           Compatibility signals and conversation learnings — framed around what fits your life and
           values, not &quot;scoring&quot; anyone.
         </p>
-        <p className="mt-4 max-w-2xl text-xs leading-relaxed text-[#6b6b6b]">
+        <p className="mt-4 max-w-2xl text-xs leading-relaxed text-ink-soft">
           Saved locally in this browser. Use initials or nicknames if you want to keep this private.
         </p>
+        <div className="stitch-rule mx-auto mt-8 max-w-2xl opacity-[0.26]" aria-hidden />
       </header>
 
       <div className="flex flex-1 flex-col gap-6 px-5 py-6 lg:flex-row lg:gap-8 lg:px-12 lg:py-8">
@@ -235,7 +236,7 @@ export default function MatchTrackerTab() {
             <button
               type="button"
               onClick={handleAdd}
-              className="rounded-full border border-[#9EFF6B]/45 bg-[#9EFF6B]/14 px-4 py-2 font-mono text-[11px] uppercase tracking-[0.14em] text-[#E9FFB8] hover:bg-[#9EFF6B]/22"
+              className="rounded-full border border-accent/40 bg-accent-soft px-4 py-2 font-sans text-[11px] uppercase tracking-[0.14em] text-accent-ink hover:bg-accent-soft"
             >
               Add match
             </button>
@@ -302,7 +303,7 @@ export default function MatchTrackerTab() {
 
           <div className="min-h-0 flex-1 space-y-3 overflow-y-auto pb-8">
             {filteredMatches.length === 0 ? (
-              <p className="rounded-2xl border border-dashed border-[#2A2A2A] px-4 py-10 text-center text-sm text-[#6b6b6b]">
+              <p className="rounded-2xl border border-dashed border-border px-4 py-10 text-center text-sm text-ink-soft">
                 No matches match these filters yet.
               </p>
             ) : (
@@ -316,30 +317,30 @@ export default function MatchTrackerTab() {
                     onClick={() => openMatch(m)}
                     className={`w-full rounded-2xl border p-4 text-left transition-colors ${
                       active
-                        ? 'border-[#9EFF6B]/45 bg-[#9EFF6B]/08'
-                        : 'border-[#2A2A2A] bg-[#111]/90 hover:border-[#3a3a3a]'
+                        ? 'border-accent/40 bg-accent/08'
+                        : 'border-border bg-muted/90 hover:border-border'
                     }`}
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0">
-                        <p className="truncate font-semibold text-[#F5F5F5]">
+                        <p className="truncate font-semibold text-ink">
                           {m.name.trim() || 'Untitled match'}
                         </p>
-                        <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.14em] text-[#6b6b6b]">
+                        <p className="mt-1 font-sans text-[10px] uppercase tracking-[0.14em] text-ink-soft">
                           {m.app} · matched {m.dateMatched || '—'}
                         </p>
                       </div>
                       <span
-                        className={`shrink-0 rounded-full border px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.12em] ${overallClass(m.overallFit)}`}
+                        className={`shrink-0 rounded-full border px-2 py-0.5 font-sans text-[9px] uppercase tracking-[0.12em] ${overallClass(m.overallFit)}`}
                       >
                         {m.overallFit}
                       </span>
                     </div>
-                    <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.14em] text-[#A1A1A1]">
+                    <p className="mt-3 font-sans text-[10px] uppercase tracking-[0.14em] text-ink-secondary">
                       {m.status}
                     </p>
-                    <p className="mt-2 text-xs text-[#A1A1A1]">
-                      <span className="text-[#6b6b6b]">Source · </span>
+                    <p className="mt-2 text-xs text-ink-secondary">
+                      <span className="text-ink-soft">Source · </span>
                       {preview(
                         m.sourceType === 'Prompt'
                           ? m.sourcePromptLabel ?? promptById.get(m.sourcePromptId ?? '')?.prompt
@@ -347,15 +348,15 @@ export default function MatchTrackerTab() {
                         72,
                       )}
                     </p>
-                    <p className="mt-1 text-xs italic text-[#8a8a8a]">
+                    <p className="mt-1 text-xs italic text-ink-soft">
                       “{preview(m.firstMessage, 88)}”
                     </p>
                     <div className="mt-3 flex flex-wrap gap-1.5">
-                      <span className="rounded-md border border-[#2A2A2A] bg-[#151515] px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.12em] text-[#9EFF6B]">
+                      <span className="rounded-md border border-border bg-card px-2 py-0.5 font-sans text-[9px] uppercase tracking-[0.12em] text-accent">
                         {strong} strong signals
                       </span>
                       {mismatch > 0 ? (
-                        <span className="rounded-md border border-amber-900/35 bg-amber-950/25 px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.12em] text-amber-100/85">
+                        <span className="rounded-md border border-amber-200/90 bg-amber-50 px-2 py-0.5 font-sans text-[9px] uppercase tracking-[0.12em] text-amber-900">
                           {mismatch} caution
                         </span>
                       ) : null}
@@ -369,12 +370,12 @@ export default function MatchTrackerTab() {
 
         <main className="min-w-0 flex-1 pb-16">
           <div className={sectionClass}>
-            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#2A2A2A]/80 pb-5">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-5">
               <div>
                 <h2 className="text-lg font-semibold">
                   {draft.name.trim() || 'New match note'}
                 </h2>
-                <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.18em] text-[#6b6b6b]">
+                <p className="mt-1 font-sans text-[10px] uppercase tracking-[0.18em] text-ink-soft">
                   Profile barometer · conversation learnings
                 </p>
               </div>
@@ -382,14 +383,14 @@ export default function MatchTrackerTab() {
                 <button
                   type="button"
                   onClick={handleSave}
-                  className="rounded-full border border-[#9EFF6B]/45 bg-[#9EFF6B]/14 px-4 py-2 font-mono text-[11px] uppercase tracking-[0.14em] text-[#E9FFB8]"
+                  className="rounded-full border border-accent/40 bg-accent-soft px-4 py-2 font-sans text-[11px] uppercase tracking-[0.14em] text-accent-ink"
                 >
                   Save
                 </button>
                 <button
                   type="button"
                   onClick={handleDelete}
-                  className="rounded-full border border-[#3a3a3a] px-4 py-2 font-mono text-[11px] uppercase tracking-[0.14em] text-[#A1A1A1] hover:border-amber-900/45 hover:text-amber-100"
+                  className="rounded-full border border-border px-4 py-2 font-sans text-[11px] uppercase tracking-[0.14em] text-ink-secondary transition-colors hover:border-amber-200 hover:bg-amber-50/80 hover:text-amber-900"
                 >
                   Delete
                 </button>
@@ -398,7 +399,7 @@ export default function MatchTrackerTab() {
 
             <div className="mt-6 grid gap-8 lg:grid-cols-2">
               <div className="space-y-4">
-                <h3 className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#9EFF6B]">
+                <h3 className="font-sans text-[10px] uppercase tracking-[0.2em] text-accent">
                   Basic info
                 </h3>
                 <label className={labelClass}>
@@ -486,7 +487,7 @@ export default function MatchTrackerTab() {
               </div>
 
               <div className="space-y-4">
-                <h3 className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#9EFF6B]">
+                <h3 className="font-sans text-[10px] uppercase tracking-[0.2em] text-accent">
                   What they responded to
                 </h3>
                 <label className={labelClass}>
@@ -599,11 +600,11 @@ export default function MatchTrackerTab() {
               </div>
             </div>
 
-            <div className={`${sectionClass} mt-8 border-[#2A2A2A] bg-[#0d0d0d]`}>
-              <h3 className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#9EFF6B]">
+            <div className={`${sectionClass} mt-8`}>
+              <h3 className="font-sans text-[10px] uppercase tracking-[0.2em] text-accent">
                 Fit signals
               </h3>
-              <p className="mt-2 text-xs text-[#6b6b6b]">
+              <p className="mt-2 text-xs text-ink-soft">
                 Reflective tags — not a report card. Strong / Possible / Unclear / gentle mismatch.
               </p>
               <div className="mt-5 grid gap-4 sm:grid-cols-2">
@@ -631,7 +632,7 @@ export default function MatchTrackerTab() {
                     </select>
                     <div className="mt-2">
                       <span
-                        className={`inline-block rounded-lg border px-2 py-1 font-mono text-[9px] uppercase tracking-[0.12em] ${fitChipClass(draft.fitSignals[key])}`}
+                        className={`inline-block rounded-lg border px-2 py-1 font-sans text-[9px] uppercase tracking-[0.12em] ${fitChipClass(draft.fitSignals[key])}`}
                       >
                         {draft.fitSignals[key]}
                       </span>
@@ -641,8 +642,8 @@ export default function MatchTrackerTab() {
               </div>
             </div>
 
-            <div className={`${sectionClass} mt-8 border-[#2A2A2A] bg-[#0d0d0d]`}>
-              <h3 className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#9EFF6B]">
+            <div className={`${sectionClass} mt-8`}>
+              <h3 className="font-sans text-[10px] uppercase tracking-[0.2em] text-accent">
                 Conversation notes
               </h3>
               <div className="mt-5 grid gap-4 lg:grid-cols-2">
@@ -670,56 +671,56 @@ export default function MatchTrackerTab() {
                 </label>
               </div>
               <div className="mt-4 flex flex-wrap gap-6">
-                <label className="flex cursor-pointer items-center gap-2 font-mono text-[11px] text-[#A1A1A1]">
+                <label className="flex cursor-pointer items-center gap-2 font-sans text-[11px] text-ink-secondary">
                   <input
                     type="checkbox"
                     checked={!!draft.conversationNotes?.didConversationFeelEasy}
                     onChange={(e) =>
                       updateConversation({ didConversationFeelEasy: e.target.checked })
                     }
-                    className="h-4 w-4 rounded border-[#2A2A2A] bg-[#151515] accent-[#9EFF6B]"
+                    className="h-4 w-4 rounded border-border bg-card accent-accent"
                   />
                   Conversation felt easy
                 </label>
-                <label className="flex cursor-pointer items-center gap-2 font-mono text-[11px] text-[#A1A1A1]">
+                <label className="flex cursor-pointer items-center gap-2 font-sans text-[11px] text-ink-secondary">
                   <input
                     type="checkbox"
                     checked={!!draft.conversationNotes?.didTheyShowCuriosity}
                     onChange={(e) =>
                       updateConversation({ didTheyShowCuriosity: e.target.checked })
                     }
-                    className="h-4 w-4 rounded border-[#2A2A2A] bg-[#151515] accent-[#9EFF6B]"
+                    className="h-4 w-4 rounded border-border bg-card accent-accent"
                   />
                   They showed curiosity
                 </label>
-                <label className="flex cursor-pointer items-center gap-2 font-mono text-[11px] text-[#A1A1A1]">
+                <label className="flex cursor-pointer items-center gap-2 font-sans text-[11px] text-ink-secondary">
                   <input
                     type="checkbox"
                     checked={!!draft.conversationNotes?.didItFeelLikeInterview}
                     onChange={(e) =>
                       updateConversation({ didItFeelLikeInterview: e.target.checked })
                     }
-                    className="h-4 w-4 rounded border-[#2A2A2A] bg-[#151515] accent-[#9EFF6B]"
+                    className="h-4 w-4 rounded border-border bg-card accent-accent"
                   />
                   Felt interview-y
                 </label>
-                <label className="flex cursor-pointer items-center gap-2 font-mono text-[11px] text-[#A1A1A1]">
+                <label className="flex cursor-pointer items-center gap-2 font-sans text-[11px] text-ink-secondary">
                   <input
                     type="checkbox"
                     checked={!!draft.conversationNotes?.movedTowardDate}
                     onChange={(e) => updateConversation({ movedTowardDate: e.target.checked })}
-                    className="h-4 w-4 rounded border-[#2A2A2A] bg-[#151515] accent-[#9EFF6B]"
+                    className="h-4 w-4 rounded border-border bg-card accent-accent"
                   />
                   Moved toward a date
                 </label>
-                <label className="flex cursor-pointer items-center gap-2 font-mono text-[11px] text-[#A1A1A1]">
+                <label className="flex cursor-pointer items-center gap-2 font-sans text-[11px] text-ink-secondary">
                   <input
                     type="checkbox"
                     checked={!!draft.conversationNotes?.conversationStalled}
                     onChange={(e) =>
                       updateConversation({ conversationStalled: e.target.checked })
                     }
-                    className="h-4 w-4 rounded border-[#2A2A2A] bg-[#151515] accent-[#9EFF6B]"
+                    className="h-4 w-4 rounded border-border bg-card accent-accent"
                   />
                   Conversation stalled
                 </label>
@@ -747,38 +748,38 @@ export default function MatchTrackerTab() {
               </label>
             </div>
 
-            <div className={`${sectionClass} mt-8 border-[#2A2A2A] bg-[#0d0d0d]`}>
+            <div className={`${sectionClass} mt-8`}>
               <div className="flex flex-wrap items-center justify-between gap-3">
-                <h3 className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#9EFF6B]">
+                <h3 className="font-sans text-[10px] uppercase tracking-[0.2em] text-accent">
                   Date notes
                 </h3>
                 <button
                   type="button"
                   onClick={addDateRow}
-                  className="rounded-full border border-[#2A2A2A] px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-[#A1A1A1] hover:border-[#9EFF6B]/35"
+                  className="rounded-full border border-border px-3 py-1.5 font-sans text-[10px] uppercase tracking-[0.14em] text-ink-secondary hover:border-accent/30"
                 >
                   Add date
                 </button>
               </div>
               <div className="mt-5 space-y-6">
                 {(draft.dates ?? []).length === 0 ? (
-                  <p className="text-sm text-[#6b6b6b]">
+                  <p className="text-sm text-ink-soft">
                     No dates logged yet — add one when you meet up.
                   </p>
                 ) : (
                   (draft.dates ?? []).map((dn, idx) => (
                     <div
                       key={dn.id}
-                      className="rounded-xl border border-[#2A2A2A] bg-[#151515]/60 p-4"
+                      className="rounded-xl border border-border bg-muted/80 p-4"
                     >
                       <div className="flex flex-wrap items-center justify-between gap-2">
-                        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#6b6b6b]">
+                        <p className="font-sans text-[10px] uppercase tracking-[0.18em] text-ink-soft">
                           Outing {idx + 1}
                         </p>
                         <button
                           type="button"
                           onClick={() => removeDateRow(dn.id)}
-                          className="font-mono text-[10px] uppercase tracking-[0.14em] text-amber-100/80 hover:text-amber-50"
+                          className="font-sans text-[10px] uppercase tracking-[0.14em] text-rose-warm/90 underline-offset-2 transition-colors hover:text-rose-warm hover:underline"
                         >
                           Remove
                         </button>
@@ -903,8 +904,8 @@ export default function MatchTrackerTab() {
               </div>
             </div>
 
-            <div className={`${sectionClass} mt-8 border-[#2A2A2A] bg-[#0d0d0d]`}>
-              <h3 className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#9EFF6B]">
+            <div className={`${sectionClass} mt-8`}>
+              <h3 className="font-sans text-[10px] uppercase tracking-[0.2em] text-accent">
                 Interests & general notes
               </h3>
               <label className={`${labelClass} mt-4 block`}>
