@@ -18,6 +18,7 @@ import type {
   Strength,
 } from './data/promptTypes'
 import { usePromptBankPersistenceContext } from './context/usePromptBankPersistenceContext'
+import { PriorityLaneExplainer, UseCarefullyExplainer } from './PromptStrengthExplainers'
 
 const CATEGORY_ORDER: Category[] = [
   'Getting Personal',
@@ -598,14 +599,21 @@ export default function PromptBankApp({
                       const lockBoost = p.strength === 'Lock'
                       return (
                         <li key={p.id}>
-                          <button
-                            type="button"
+                          <div
+                            role="button"
+                            tabIndex={0}
                             onClick={() => selectPrompt(p.id)}
-                            className={`w-full rounded-2xl border px-4 py-4 text-left transition-[border-color,box-shadow,ring-color] duration-200 ease-out motion-reduce:transition-none ${
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault()
+                                selectPrompt(p.id)
+                              }
+                            }}
+                            className={`w-full cursor-pointer rounded-2xl border px-4 py-4 text-left outline-none transition-[border-color,box-shadow,ring-color] duration-200 ease-out motion-reduce:transition-none focus-visible:ring-2 focus-visible:ring-accent/35 focus-visible:ring-offset-2 focus-visible:ring-offset-card ${
                               selectedId === p.id
                                 ? 'border-accent/55 bg-card ring-2 ring-accent/18 shadow-[var(--shadow-soft)]'
                                 : lockBoost
-                                  ? 'border-accent/28 bg-card shadow-[var(--shadow-accent-lift)] hover:border-accent/45'
+                                  ? 'border-signal-priority/30 bg-card shadow-[var(--shadow-signal-priority-lift)] hover:border-signal-priority/45'
                                   : 'border-border bg-card hover:border-accent/28'
                             }`}
                           >
@@ -613,21 +621,11 @@ export default function PromptBankApp({
                               <span className="text-base font-semibold leading-snug">
                                 {p.prompt}
                               </span>
-                              <span className="flex shrink-0 gap-1">
+                              <span className="flex shrink-0 items-center gap-1">
                                 {p.strength === 'Lock' || hasRecAnswer ? (
-                                  <span
-                                    className="size-2 rounded-full bg-accent shadow-[var(--shadow-accent-dot)]"
-                                    title="Lock leverage / recommended lane"
-                                  />
+                                  <PriorityLaneExplainer />
                                 ) : null}
-                                {caution ? (
-                                  <span
-                                    className="font-sans text-xs text-amber-800"
-                                    title="Use carefully — add specificity or creativity"
-                                  >
-                                    !
-                                  </span>
-                                ) : null}
+                                {caution ? <UseCarefullyExplainer /> : null}
                               </span>
                             </div>
                             <div className="mt-3 flex flex-wrap gap-2">
@@ -653,7 +651,7 @@ export default function PromptBankApp({
                                 ? `${va.length === p.answers.length ? `${va.length}` : `${va.length}/${p.answers.length}`} answer${va.length === 1 ? '' : 's'} (cliché filter)`
                                 : `${p.answers.length} answer${p.answers.length === 1 ? '' : 's'}`}
                             </p>
-                          </button>
+                          </div>
                         </li>
                       )
                     })}

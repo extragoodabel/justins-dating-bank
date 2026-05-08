@@ -32,6 +32,17 @@
 
   --eg-ring-card: rgb(34 31 30 / 0.055);
 
+  /* Priority lane dot — semantic “go” green, separate from brand accent */
+  --eg-signal-priority: #227848;
+  --eg-signal-priority-soft: #e8f4ec;
+  --eg-shadow-signal-priority-dot: 0 2px 12px rgb(34 120 72 / 0.38);
+  --eg-shadow-signal-priority-lift: 0 8px 28px -8px rgb(34 120 72 / 0.14);
+
+  --eg-signal-caution-border: rgb(180 83 9 / 0.42);
+  --eg-signal-caution-bg: rgb(245 158 11 / 0.11);
+  --eg-signal-caution-text: #92400e;
+  --eg-signal-caution-heading: #b45309;
+
   --eg-shadow-soft: 0 2px 16px rgb(34 31 30 / 0.06);
   --eg-shadow-card: 0 4px 24px rgb(34 31 30 / 0.07);
   --eg-shadow-lift: 0 10px 40px rgb(34 31 30 / 0.09);
@@ -91,6 +102,16 @@
   --eg-lilac-soft: #1e1a2a;
 
   --eg-ring-card: rgb(255 255 255 / 0.06);
+
+  --eg-signal-priority: #9eff6b;
+  --eg-signal-priority-soft: #152210;
+  --eg-shadow-signal-priority-dot: 0 2px 16px rgb(158 255 107 / 0.45);
+  --eg-shadow-signal-priority-lift: 0 8px 32px -8px rgb(158 255 107 / 0.18);
+
+  --eg-signal-caution-border: rgb(252 211 77 / 0.35);
+  --eg-signal-caution-bg: rgb(251 191 36 / 0.09);
+  --eg-signal-caution-text: #fef9c3;
+  --eg-signal-caution-heading: #fde047;
 
   --eg-shadow-soft: 0 2px 18px rgb(0 0 0 / 0.55);
   --eg-shadow-card: 0 4px 28px rgb(0 0 0 / 0.6);
@@ -156,12 +177,18 @@
 
   --color-ring-card: var(--eg-ring-card);
 
+  --color-signal-priority: var(--eg-signal-priority);
+  --color-signal-priority-soft: var(--eg-signal-priority-soft);
+
   --shadow-soft: var(--eg-shadow-soft);
   --shadow-card: var(--eg-shadow-card);
   --shadow-lift: var(--eg-shadow-lift);
   --shadow-accent-lift: var(--eg-shadow-accent-lift);
   --shadow-accent-pin: var(--eg-shadow-accent-pin);
   --shadow-accent-dot: var(--eg-shadow-accent-dot);
+
+  --shadow-signal-priority-dot: var(--eg-shadow-signal-priority-dot);
+  --shadow-signal-priority-lift: var(--eg-shadow-signal-priority-lift);
 
   --image-page-weave: var(--eg-page-weave);
   --image-page-radial: var(--eg-page-radial);
